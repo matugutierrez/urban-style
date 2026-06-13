@@ -33,7 +33,9 @@ app.use(express.json());
 app.use('/uploads', express.static(UPLOADS_PATH));
 app.use(express.static(path.join(__dirname)));
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const sgApiKey = process.env.SENDGRID_API_KEY;
+console.log('SendGrid key status:', sgApiKey ? `SET (starts with ${sgApiKey.substring(0, 6)}...)` : 'NOT SET');
+sgMail.setApiKey(sgApiKey);
 const FROM_EMAIL = { email: 'uurbannstylee@gmail.com', name: 'Urban Style' };
 const REPLY_TO = 'uurbannstylee@gmail.com';
 
@@ -1242,6 +1244,22 @@ function descontarStock(items) {
     });
     guardarProductos(productos);
 }
+
+// ─── TEST: endpoint para probar email ───
+app.get('/api/test-email', (req, res) => {
+    sgMail.send({
+        from: FROM_EMAIL,
+        to: process.env.ADMIN_EMAIL,
+        replyTo: REPLY_TO,
+        subject: 'Test email desde Urban Style',
+        html: '<h2>Test</h2><p>Si ves esto, SendGrid funciona.</p>',
+    }).then(() => {
+        res.json({ exito: true, mensaje: 'Email enviado correctamente' });
+    }).catch(err => {
+        console.error('Error test email:', err.response?.body || err.message);
+        res.status(500).json({ exito: false, error: err.response?.body || err.message });
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en ${BASE_URL}`);
