@@ -1,0 +1,606 @@
+[
+  {
+    "id": "rem-1",
+    "nombre": "Remera Oversize Negra",
+    "categoria": "remeras",
+    "subcategoria": "oversize",
+    "precio": 39990,
+    "imagen": "/uploads/ee77e19ed2fa6ec74b1ce5f6022279bc",
+    "descripcion": "Remera oversize de algodón premium. Corte relajado, ideal para looks urbanos.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 1,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-2",
+    "nombre": "Remera Urban White",
+    "categoria": "remeras",
+    "subcategoria": "estampadas",
+    "precio": 29990,
+    "imagen": "/uploads/163fb65f17098d904068ab85cf83a5e5",
+    "descripcion": "Remera estampada con diseño urbano. Fresca y versátil para el día a día.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-3",
+    "nombre": "Remera Classic White",
+    "categoria": "remeras",
+    "subcategoria": "lisas",
+    "precio": 24990,
+    "imagen": "/uploads/afd6677e40854f6c6f32c83c5e8389a1",
+    "descripcion": "Remera lisa clásica, básica y esencial. Algodón suave de alta calidad.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-4",
+    "nombre": "Remera Heavyweight Grey",
+    "categoria": "remeras",
+    "subcategoria": "oversize",
+    "precio": 38990,
+    "imagen": "/uploads/d6100d19275d60cdc3c54251d667ca16",
+    "descripcion": "Remera heavyweight con corte oversize. Tela gruesa y durable.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-5",
+    "nombre": "Remera Yellow Acid Wash",
+    "categoria": "remeras",
+    "subcategoria": "estampadas",
+    "precio": 36990,
+    "imagen": "/uploads/fe7ef14292d306a5b82390b3ccdc6301",
+    "descripcion": "Remera acid wash amarilla. Look desgastado y moderno.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-6",
+    "nombre": "Remera Basic Black",
+    "categoria": "remeras",
+    "subcategoria": "lisas",
+    "precio": 23990,
+    "imagen": "/uploads/5a1f7dd515e8d694404171368bcae302",
+    "descripcion": "Remera negra lisa, el must-have de todo guardarropas. Algodón peinado.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-7",
+    "nombre": "Remera Streetwear Olive",
+    "categoria": "remeras",
+    "subcategoria": "oversize",
+    "precio": 41990,
+    "imagen": "/uploads/4f3068dd088fa3bd37784dbb9e561a5d",
+    "descripcion": "Remera streetwear color oliva. Corte oversize con estilo militar.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "rem-8",
+    "nombre": "Remera Vintage Graphic",
+    "categoria": "remeras",
+    "subcategoria": "estampadas",
+    "precio": 34990,
+    "imagen": "/uploads/75f97f8e93075b5591a681eb75083488",
+    "descripcion": "Remera con gráfica vintage. Estilo retro y personalidad única.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "buz-1",
+    "nombre": "Buzo Premium Hoodie",
+    "categoria": "buzos",
+    "subcategoria": "hoodies",
+    "precio": 59990,
+    "imagen": "/uploads/ad58c0838781ce2593136efe5da88c3f",
+    "descripcion": "Buzo con capucha premium. Interior fleece para máxima calidez.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "buz-2",
+    "nombre": "Buzo Oversize Off-White",
+    "categoria": "buzos",
+    "subcategoria": "oversize",
+    "precio": 64990,
+    "imagen": "/uploads/b6167e2279481bc7900d279c10532ddf",
+    "descripcion": "Buzo oversize off-white. Corte amplio y tela premium.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "buz-3",
+    "nombre": "Buzo Classic Black Crewneck",
+    "categoria": "buzos",
+    "subcategoria": "crewnecks",
+    "precio": 49990,
+    "imagen": "/uploads/95565c6681ad226617ba584b30d60237",
+    "descripcion": "Buzo clásico negro cuello redondo. Algodón de alta gramaje.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "buz-4",
+    "nombre": "Hoodie Streetwear Graphic",
+    "categoria": "buzos",
+    "subcategoria": "hoodies",
+    "precio": 58990,
+    "imagen": "/uploads/0b577f77452f8c8a930f54669f77b0c6",
+    "descripcion": "Hoodie con diseño gráfico streetwear. Capucha ajustable con cordones.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "buz-5",
+    "nombre": "Buzo Acid Wash Crewneck",
+    "categoria": "buzos",
+    "subcategoria": "crewnecks",
+    "precio": 52990,
+    "imagen": "/uploads/7b3cee6394d047608ec0fc318bd6e22b",
+    "descripcion": "Buzo crewneck acid wash. Acabado desgastado único.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "buz-6",
+    "nombre": "Buzo Oversize Beige",
+    "categoria": "buzos",
+    "subcategoria": "oversize",
+    "precio": 62990,
+    "imagen": "/uploads/906437b17a09f88bfa8cb02be49f561b",
+    "descripcion": "Buzo oversize beige. Corte holgado y tela suave.",
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 60,
+    "activo": true,
+    "stockPorTalle": {
+      "M": 10,
+      "S": 10,
+      "XXXL": 10,
+      "L": 10,
+      "XL": 10,
+      "XXL": 10
+    }
+  },
+  {
+    "id": "pan-1",
+    "nombre": "Pantalón Cargo Black",
+    "categoria": "pantalones",
+    "subcategoria": "cargo",
+    "precio": 54990,
+    "imagen": "/uploads/2cf3112f67d6dcf9e981ad051709ba91",
+    "descripcion": "Pantalón cargo negro con múltiples bolsillos. Algodón ripstop.",
+    "talles": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46",
+      "48",
+      "50"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 80,
+    "activo": true,
+    "stockPorTalle": {
+      "36": 10,
+      "38": 10,
+      "40": 10,
+      "42": 10,
+      "44": 10,
+      "46": 10,
+      "48": 10,
+      "50": 10
+    }
+  },
+  {
+    "id": "pan-2",
+    "nombre": "Jogger Heavyweight Grey",
+    "categoria": "pantalones",
+    "subcategoria": "joggers",
+    "precio": 48990,
+    "imagen": "/uploads/06c81014aaff8caedfecafae6afcab21",
+    "descripcion": "Jogger heavyweight gris. Puños ajustados y cintura elastizada.",
+    "talles": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46",
+      "48",
+      "50"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 80,
+    "activo": true,
+    "stockPorTalle": {
+      "36": 10,
+      "38": 10,
+      "40": 10,
+      "42": 10,
+      "44": 10,
+      "46": 10,
+      "48": 10,
+      "50": 10
+    }
+  },
+  {
+    "id": "pan-3",
+    "nombre": "Jeans Wide Leg Classic",
+    "categoria": "pantalones",
+    "subcategoria": "jeans",
+    "precio": 59990,
+    "imagen": "/uploads/c23a5353a0b177f765529e88aaaa6c38",
+    "descripcion": "Jeans wide leg clásicos. Denim de alta calidad con corte recto amplio.",
+    "talles": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46",
+      "48",
+      "50"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 80,
+    "activo": true,
+    "stockPorTalle": {
+      "36": 10,
+      "38": 10,
+      "40": 10,
+      "42": 10,
+      "44": 10,
+      "46": 10,
+      "48": 10,
+      "50": 10
+    }
+  },
+  {
+    "id": "pan-4",
+    "nombre": "Pantalón Cargo Olive",
+    "categoria": "pantalones",
+    "subcategoria": "cargo",
+    "precio": 56990,
+    "imagen": "/uploads/7319972e78cba52691df9bee6125f2ad",
+    "descripcion": "Pantalón cargo verde oliva. Estilo militar con corte moderno.",
+    "talles": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46",
+      "48",
+      "50"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 80,
+    "activo": true,
+    "stockPorTalle": {
+      "36": 10,
+      "38": 10,
+      "40": 10,
+      "42": 10,
+      "44": 10,
+      "46": 10,
+      "48": 10,
+      "50": 10
+    }
+  },
+  {
+    "id": "pan-5",
+    "nombre": "Jogger Streetwear Black",
+    "categoria": "pantalones",
+    "subcategoria": "joggers",
+    "precio": 46990,
+    "imagen": "/uploads/7882a3d7046b81811e35580ed6829733",
+    "descripcion": "Jogger negro streetwear. Algodón fleece con bolsillos laterales.",
+    "talles": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46",
+      "48",
+      "50"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 80,
+    "activo": true,
+    "stockPorTalle": {
+      "36": 10,
+      "38": 10,
+      "40": 10,
+      "42": 10,
+      "44": 10,
+      "46": 10,
+      "48": 10,
+      "50": 10
+    }
+  },
+  {
+    "id": "pan-6",
+    "nombre": "Jeans Carpenter Vintage",
+    "categoria": "pantalones",
+    "subcategoria": "jeans",
+    "precio": 61990,
+    "imagen": "/uploads/145a5205d900787aa094661812c17a9a",
+    "descripcion": "Jeans carpenter estilo vintage. Bolsillos utilitarios y lavado desgastado.",
+    "talles": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46",
+      "48",
+      "50"
+    ],
+    "cuotasSin": 3,
+    "cuotasCon": 6,
+    "stock": 80,
+    "activo": true,
+    "stockPorTalle": {
+      "36": 10,
+      "38": 10,
+      "40": 10,
+      "42": 10,
+      "44": 10,
+      "46": 10,
+      "48": 10,
+      "50": 10
+    }
+  }
+]

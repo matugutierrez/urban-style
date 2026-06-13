@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Urban Style</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; min-height: 100vh; }
+        .admin-header { background: #000; color: #fff; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .admin-header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+        .admin-header h1 span { color: #999; font-weight: 300; }
+        .admin-header .user-info { display: flex; align-items: center; gap: 16px; font-size: 13px; }
+        .admin-header .user-info span { color: #999; }
+        .admin-header .user-info button { background: none; border: 1px solid #444; color: #fff; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-family: inherit; }
+        .admin-header .user-info button:hover { background: #222; }
+        .login-container { max-width: 340px; margin: 100px auto; padding: 32px; text-align: center; }
+        .login-container h2 { font-size: 22px; margin-bottom: 24px; font-weight: 700; }
+        .login-container input { width: 100%; padding: 12px 16px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; outline: none; }
+        .login-container input:focus { border-color: #000; }
+        .login-container button { width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .login-container button:hover { background: #222; }
+        .login-container .error { color: #e74c3c; font-size: 13px; margin-top: 12px; }
+        .login-container .success { color: #2e7d32; font-size: 13px; margin-top: 12px; }
+        .code-inputs { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+        .code-inputs input { width: 44px; height: 52px; text-align: center; font-size: 24px; font-weight: 700; border: 2px solid #ddd; border-radius: 8px; outline: none; font-family: monospace; padding: 0; line-height: 1; }
+        .code-inputs input:focus { border-color: #000; }
+        .code-actions { display: flex; gap: 8px; justify-content: center; }
+        .code-actions button { padding: 10px 24px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .code-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .admin-content { max-width: 1200px; margin: 32px auto; padding: 0 32px; }
+        .admin-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .admin-toolbar h2 { font-size: 20px; font-weight: 700; }
+        .admin-toolbar .actions { display: flex; gap: 8px; }
+        .admin-toolbar .actions button { padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-primary { background: #000; color: #fff; }
+        .btn-primary:hover { background: #222; }
+        .btn-secondary { background: #f0f0f0; color: #000; }
+        .btn-secondary:hover { background: #e0e0e0; }
+        .btn-danger { background: #e74c3c; color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
+        .table-wrap { overflow-x: auto; border: 1px solid #eee; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead { background: #f5f5f5; }
+        th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; border-bottom: 2px solid #eee; }
+        td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        tr:hover td { background: #fafafa; }
+        .cell-actions { white-space: nowrap; }
+        .product-img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-active { background: #e8f5e9; color: #2e7d32; }
+        .badge-inactive { background: #fbe9e7; color: #c62828; }
+        .badge-low { background: #fff3e0; color: #e65100; }
+        .cell-actions button { padding: 5px 10px; border: none; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: inherit; font-weight: 500; margin-top: 6px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #fff; border-radius: 12px; width: 90%; max-width: 540px; max-height: 90vh; overflow-y: auto; padding: 32px; }
+        .modal h3 { font-size: 18px; margin-bottom: 20px; font-weight: 700; }
+        .modal .form-row { margin-bottom: 14px; }
+        .modal label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #000; }
+        .modal .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+        .modal .form-actions button { padding: 10px 24px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .stock-cell { display: flex; align-items: center; gap: 8px; }
+        .stock-cell input { width: 60px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; font-family: inherit; }
+        .stock-cell button { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: inherit; font-weight: 600; }
+        .image-upload-group { display: flex; gap: 8px; }
+        .image-upload-group input { flex: 1; }
+        .btn-upload { display: inline-block; padding: 10px 16px; background: #f0f0f0; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; white-space: nowrap; }
+        .btn-upload:hover { background: #e0e0e0; }
+        .image-preview { width: 100%; max-height: 200px; object-fit: contain; border-radius: 6px; border: 1px solid #eee; margin-top: 8px; background: #fafafa; }
+        .image-preview.loading { opacity: 0.5; }
+        .loading { text-align: center; padding: 60px; color: #999; font-size: 14px; }
+        @media (max-width: 768px) {
+            .admin-content { padding: 0 16px; }
+            .admin-toolbar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1>URBAN <span>STYLE</span> · Admin</h1>
+        <div class="user-info">
+            <span id="adminUser"></span>
+            <button onclick="logout()">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="login-container" id="loginView">
+        <h2>Acceso administrador</h2>
+        <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
+        <input type="password" id="loginPass" placeholder="Contraseña">
+        <button onclick="login()">Ingresar</button>
+        <div class="error" id="loginError"></div>
+    </div>
+
+    <div class="login-container" id="codeView" style="display:none;">
+        <h2 style="font-size:18px;">Verificación de dos pasos</h2>
+        <p style="color:#666;font-size:13px;margin-bottom:4px;">Ingresá el código de 6 dígitos</p>
+        <p style="color:#999;font-size:12px;margin-bottom:4px;">enviado a tu correo electrónico</p>
+        <div class="code-inputs" id="codeInputs">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autofocus>
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+        </div>
+        <div class="code-actions">
+            <button class="btn-secondary" id="btnResendCode" onclick="enviarCodigo()">Enviar código</button>
+            <button class="btn-primary" id="btnVerifyCode" onclick="verificarCodigo()">Verificar</button>
+        </div>
+        <div class="error" id="codeError"></div>
+        <div class="success" id="codeSuccess"></div>
+    </div>
+
+    <!-- Template: admin content solo se renderiza al autenticar -->
+    <template id="adminTemplate">
+        <div class="admin-content" id="adminView">
+            <div class="admin-toolbar">
+                <h2>Productos</h2>
+                <div class="actions">
+                    <button class="btn-secondary" onclick="cargarProductos()">↻ Actualizar</button>
+                    <button class="btn-primary" onclick="mostrarFormulario()">+ Nuevo producto</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Categoría</th>
+                            <th>Talle</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody"></tbody>
+                </table>
+            </div>
+            <div class="loading" id="loadingIndicator">Cargando productos...</div>
+        </div>
+    </template>
+
+    <!-- Modal producto -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <h3 id="modalTitle">Nuevo producto</h3>
+            <div class="form-row">
+                <label>Nombre *</label>
+                <input type="text" id="fNombre">
+            </div>
+            <div class="form-row">
+                <label>Precio *</label>
+                <input type="number" id="fPrecio" step="1">
+            </div>
+            <div class="form-row">
+                <label>Categoría *</label>
+                <select id="fCategoria">
+                    <option value="remeras">Remeras</option>
+                    <option value="buzos">Buzos</option>
+                    <option value="pantalones">Pantalones</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Subcategoría</label>
+                <input type="text" id="fSubcategoria">
+            </div>
+            <div class="form-row">
+                <label>Imagen</label>
+                <div class="image-upload-group">
+                    <input type="text" id="fImagen" placeholder="https://images.unsplash.com/..." oninput="actualizarPreview()">
+                    <div class="file-upload-wrapper">
+                        <label class="btn-upload" for="fImagenFile">📁 Explorar</label>
+                        <input type="file" id="fImagenFile" accept="image/*" style="display:none" onchange="subirImagen(this)">
+                    </div>
+                </div>
+                <img id="previewImagen" class="image-preview" src="" alt="Vista previa" style="display:none">
+            </div>
+            <div class="form-row">
+                <label>Descripción</label>
+                <textarea id="fDescripcion" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+                <label>Talles (separados por coma)</label>
+                <input type="text" id="fTalles" placeholder="S, M, L, XL">
+            </div>
+            <div class="form-row">
+                <label>Stock</label>
+                <input type="number" id="fStock" value="50">
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-primary" id="btnGuardar" onclick="guardarProducto()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let token = localStorage.getItem('adminToken') || '';
+        let editId = null;
+
+        function getAdminView() {
+            return document.getElementById('adminView');
+        }
+
+        function showLoginError(msg) {
+            document.getElementById('loginError').textContent = msg;
+        }
+
+        function login() {
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPass').value.trim();
+            if (!username || !password) return showLoginError('Completá ambos campos.');
+
+            fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.exito) {
+                    token = data.token;
+                    localStorage.setItem('adminToken', token);
+                    document.getElementById('loginUser').value = '';
+                    document.getElementById('loginPass').value = '';
+                    showLoginError('');
+                    mostrarCodeView();
+                } else {
+                    showLoginError(data.error || 'Credenciales incorrectas.');
+                }
+            })
+            .catch(() => showLoginError('Error de conexión con el servidor.'));
+        }
+
+        function logout() {
+            token = '';
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('admin2faVerified');
+            document.getElementById('loginView').style.display = 'block';
+            document.getElementById('codeView').style.display = 'none';
+            const av = getAdminView();
+            if (av) av.remove();
+            document.getElementById('adminUser').textContent = '';
+        }
+
+        function mostrarCodeView() {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('codeView').style.display = 'block';
+            const av = getAdminView();
+            if (av) av.remove();
+            document.getElementById('codeError').textContent = '';
+            document.getElementById('codeSuccess').textContent = '';
+            document.getElementById('btnResendCode').disabled = false;
+            document.getElementById('btnVerifyCode').disabled = false;
+            document.getElementById('codeInputs').querySelectorAll('input').forEach(i => i.value = '');
+            document.getElementById('codeInputs').querySelector('input').focus();
+            enviarCodigo();
+        }
+
+        function mostrarPanel() {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('codeView').style.display = 'none';
+            // Clonar el template del admin y agregarlo al body
+            const template = document.getElementById('adminTemplate');
+            const clone = template.content.cloneNode(true);
+            document.body.appendChild(clone);
+            document.getElementById('adminUser').textContent = 'admin';
+            cargarProductos();
+        }
+
+        function enviarCodigo() {
+            const btn = document.getElementById('btnResendCode');
+            btn.disabled = true;
+            document.getElementById('codeError').textContent = '';
+            document.getElementById('codeSuccess').textContent = '';
+
+            fetch('/api/admin/send-code', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.exito) {
+                    document.getElementById('codeSuccess').textContent = 'Código enviado al email.';
+                } else {
+                    document.getElementById('codeError').textContent = data.error || 'Error al enviar código.';
+                }
+            })
+            .catch(() => {
+                document.getElementById('codeError').textContent = 'Error de conexión.';
+            })
+            .finally(() => {
+                setTimeout(() => { btn.disabled = false; }, 5000);
+            });
+        }
+
+        function verificarCodigo() {
+            const inputs = document.getElementById('codeInputs').querySelectorAll('input');
+            const code = Array.from(inputs).map(i => i.value).join('');
+            if (code.length !== 6) {
+                document.getElementById('codeError').textContent = 'Completá los 6 dígitos.';
+                return;
+            }
+
+            document.getElementById('btnVerifyCode').disabled = true;
+            document.getElementById('codeError').textContent = '';
+
+            fetch('/api/admin/verify-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ code })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.exito && data.verified) {
+                    localStorage.setItem('admin2faVerified', 'true');
+                    mostrarPanel();
+                } else {
+                    document.getElementById('codeError').textContent = data.error || 'Código incorrecto.';
+                    document.getElementById('btnVerifyCode').disabled = false;
+                    inputs.forEach(i => i.value = '');
+                    inputs[0].focus();
+                }
+            })
+            .catch(() => {
+                document.getElementById('codeError').textContent = 'Error de conexión.';
+                document.getElementById('btnVerifyCode').disabled = false;
+            });
+        }
+
+        function cargarProductos() {
+            const tbody = document.getElementById('productTableBody');
+            const loading = document.getElementById('loadingIndicator');
+            loading.style.display = 'block';
+            tbody.innerHTML = '';
+
+            fetch('/api/admin/productos', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(r => {
+                if (r.status === 401) { logout(); return null; }
+                return r.json();
+            })
+            .then(data => {
+                loading.style.display = 'none';
+                if (!data) return;
+                if (!data.length) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">No hay productos cargados.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(p => {
+                    const activa = p.activo !== false;
+                    const stockClass = !activa ? 'badge-inactive' : (p.stock <= 10 ? 'badge-low' : 'badge-active');
+                    const stockLabel = !activa ? 'Inactivo' : (p.stock <= 10 ? 'Stock bajo' : 'Activo');
+                    return `<tr>
+                        <td><img class="product-img" src="${p.imagen || 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=80'}" alt="" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=80'"></td>
+                        <td><strong>${p.nombre}</strong></td>
+                        <td>$${Number(p.precio).toLocaleString('es-AR')}</td>
+                        <td>${p.categoria}${p.subcategoria ? ' / ' + p.subcategoria : ''}</td>
+                        <td>${Array.isArray(p.talles) ? p.talles.join(', ') : p.talles || '-'}</td>
+                        <td>
+                            <div class="stock-cell">
+                                <input type="number" id="stock-${p.id}" value="${p.stock ?? 0}" min="0">
+                                <button class="btn-secondary" onclick="actualizarStock('${p.id}')">✓</button>
+                            </div>
+                        </td>
+                        <td><span class="badge ${stockClass}">${stockLabel}</span></td>
+                        <td class="cell-actions">
+                            <button class="btn-secondary" onclick="editarProducto('${p.id}')">Editar</button>
+                            <button class="btn-danger" onclick="eliminarProducto('${p.id}')">Eliminar</button>
+                        </td>
+                    </tr>`;
+                }).join('');
+            })
+            .catch(() => {
+                loading.style.display = 'none';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">Error al cargar productos.</td></tr>';
+            });
+        }
+
+        function actualizarStock(id) {
+            const val = parseInt(document.getElementById('stock-' + id).value);
+            if (isNaN(val) || val < 0) return;
+            fetch('/api/admin/productos/' + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ stock: val })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.exito) cargarProductos();
+            });
+        }
+
+        function mostrarFormulario(producto) {
+            editId = producto ? producto.id : null;
+            document.getElementById('modalTitle').textContent = producto ? 'Editar producto' : 'Nuevo producto';
+            document.getElementById('fNombre').value = producto ? producto.nombre : '';
+            document.getElementById('fPrecio').value = producto ? producto.precio : '';
+            document.getElementById('fCategoria').value = producto ? producto.categoria : 'remeras';
+            document.getElementById('fSubcategoria').value = producto ? (producto.subcategoria || '') : '';
+            document.getElementById('fImagen').value = producto ? (producto.imagen || '') : '';
+            document.getElementById('fDescripcion').value = producto ? (producto.descripcion || '') : '';
+            document.getElementById('fTalles').value = producto ? (Array.isArray(producto.talles) ? producto.talles.join(', ') : producto.talles || '') : '';
+            document.getElementById('fStock').value = producto ? (producto.stock ?? 50) : 50;
+            document.getElementById('btnGuardar').textContent = producto ? 'Guardar cambios' : 'Crear producto';
+            document.getElementById('productModal').classList.add('active');
+            actualizarPreview();
+        }
+
+        function subirImagen(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const preview = document.getElementById('previewImagen');
+            preview.classList.add('loading');
+            const formData = new FormData();
+            formData.append('productImage', file);
+            fetch('/api/admin/upload-image', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token },
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                preview.classList.remove('loading');
+                if (data.exito && data.url) {
+                    document.getElementById('fImagen').value = data.url;
+                    actualizarPreview();
+                } else {
+                    alert('Error al subir imagen: ' + (data.error || 'desconocido'));
+                }
+            })
+            .catch(() => {
+                preview.classList.remove('loading');
+                alert('Error de conexión al subir imagen.');
+            });
+        }
+
+        function actualizarPreview() {
+            const url = document.getElementById('fImagen').value.trim();
+            const preview = document.getElementById('previewImagen');
+            if (url) {
+                preview.src = url;
+                preview.style.display = 'block';
+                preview.onerror = function() { preview.style.display = 'none'; };
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById('productModal').classList.remove('active');
+            editId = null;
+        }
+
+        function guardarProducto() {
+            const data = {
+                nombre: document.getElementById('fNombre').value.trim(),
+                precio: parseFloat(document.getElementById('fPrecio').value),
+                categoria: document.getElementById('fCategoria').value,
+                subcategoria: document.getElementById('fSubcategoria').value.trim(),
+                imagen: document.getElementById('fImagen').value.trim(),
+                descripcion: document.getElementById('fDescripcion').value.trim(),
+                talles: document.getElementById('fTalles').value.split(',').map(t => t.trim()).filter(Boolean),
+                stock: parseInt(document.getElementById('fStock').value) || 0,
+            };
+
+            if (!data.nombre || !data.precio || !data.categoria) return;
+
+            const url = editId
+                ? '/api/admin/productos/' + editId
+                : '/api/admin/productos';
+            const method = editId ? 'PUT' : 'POST';
+
+            fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.exito) {
+                    cerrarModal();
+                    cargarProductos();
+                } else {
+                    alert(res.error || 'Error al guardar.');
+                }
+            });
+        }
+
+        function editarProducto(id) {
+            fetch('/api/admin/productos', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const prod = data.find(p => p.id === id);
+                if (prod) mostrarFormulario(prod);
+            });
+        }
+
+        function eliminarProducto(id) {
+            if (!confirm('¿Eliminar este producto permanentemente?')) return;
+            fetch('/api/admin/productos/' + id, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.exito) cargarProductos();
+            });
+        }
+
+        // Auto-focus entre inputs del código
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('#codeInputs input');
+            inputs.forEach((input, i) => {
+                input.addEventListener('input', function() {
+                    if (this.value && i < inputs.length - 1) {
+                        inputs[i + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && i > 0) {
+                        inputs[i - 1].focus();
+                    }
+                });
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+                    paste.split('').forEach((char, j) => {
+                        if (inputs[j]) inputs[j].value = char;
+                    });
+                    const next = Math.min(paste.length, 5);
+                    inputs[next].focus();
+                });
+            });
+        });
+
+        // Auto-login on page load
+        (function() {
+            const verified = localStorage.getItem('admin2faVerified') === 'true';
+            if (token && verified) {
+                fetch('/api/admin/productos', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                })
+                .then(r => {
+                    if (r.ok) { mostrarPanel(); }
+                    else { logout(); }
+                })
+                .catch(() => logout());
+            } else if (token) {
+                mostrarCodeView();
+            }
+        })();
+    </script>
+    <script src="js/chat.js"></script>
+</body>
+</html>

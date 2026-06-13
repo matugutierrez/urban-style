@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar - Urban Style</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <span>ENVÍOS A TODO EL PAÍS</span>
+        <span>CAMBIOS SIN CARGO</span>
+        <span>HASTA 6 CUOTAS</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: black;">URBAN</a>
+        </div>
+
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="soporte.html">Soporte</a>
+        </nav>
+
+        <div class="icons">
+            <a href="#" id="btnBuscar">Buscar</a>
+            <a href="login.html">Mi cuenta</a>
+            <a href="carrito.html">🛒</a>
+        </div>
+
+        <!-- SEARCH MENU -->
+        <div class="search-menu">
+            <span class="close-search">✕</span>
+            <input type="text" placeholder="¿Qué estás buscando?" class="search-input">
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="accesorios.html">Accesorios</a>
+        </div>
+    </header>
+
+    <!-- CATEGORIA HEADER -->
+    <section class="categoria-header">
+        <h1 id="searchTitle">Resultados de búsqueda</h1>
+        <p id="searchSub">Escribe en el buscador para encontrar productos.</p>
+    </section>
+
+    <!-- FILTROS Y ORDENACIÓN -->
+    <section class="filtros-bar" id="filtrosBarBusqueda" style="display: none;">
+        <div class="filtros-grupo">
+            <button class="filtro-btn active" data-cat="todas">Todos</button>
+            <button class="filtro-btn" data-cat="remeras">Remeras</button>
+            <button class="filtro-btn" data-cat="buzos">Buzos</button>
+            <button class="filtro-btn" data-cat="pantalones">Pantalones</button>
+        </div>
+        <div>
+            <select class="ordenar-select" id="ordenarSelect">
+                <option value="defecto">Ordenar por</option>
+                <option value="menor">Precio: Menor a Mayor</option>
+                <option value="mayor">Precio: Mayor a Menor</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section class="productos" style="padding-top: 0;">
+        <div class="grid-productos" id="gridBusqueda">
+            <!-- Se cargan dinámicamente -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>URBAN</h3>
+                <p>Streetwear premium con estilo urbano. Descubrí la nueva forma de vestir.</p>
+                <div class="footer-social">
+                    <a href="#">IG</a>
+                    <a href="#">WA</a>
+                    <a href="#">TK</a>
+                    <a href="#">YT</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <a href="remeras.html">Remeras</a>
+                <a href="buzos.html">Buzos</a>
+                <a href="pantalones.html">Pantalones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ayuda</h4>
+                <a href="soporte.html">Preguntas frecuentes</a>
+                <a href="soporte.html">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Recibí las últimas novedades y ofertas exclusivas.</p>
+                <form class="footer-form" onsubmit="return false;">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Urban — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICACIÓN -->
+    <div class="toast" id="toastCart">
+        <span class="toast-icon">🛒</span>
+        <span class="toast-message">¡Producto agregado!</span>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/productos.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        // Obtener el término de búsqueda de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryBusqueda = urlParams.get('q');
+
+        // Helpers de Normalización y Búsqueda Inteligente
+        function normalizarTexto(texto) {
+            return texto.toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function coincideBusqueda(nombreProducto, categoria, subcategoria, consulta) {
+            const n = normalizarTexto(nombreProducto);
+            const cat = normalizarTexto(categoria);
+            const sub = normalizarTexto(subcategoria);
+            const c = normalizarTexto(consulta);
+            
+            // Mapear colores (español e inglés indistintamente)
+            if (c.includes("negro") || c.includes("negra")) {
+                if (n.includes("negro") || n.includes("negra") || n.includes("black")) return true;
+            }
+            if (c.includes("blanco") || c.includes("blanca")) {
+                if (n.includes("blanco") || n.includes("blanca") || n.includes("white")) return true;
+            }
+            if (c.includes("gris")) {
+                if (n.includes("gris") || n.includes("grey") || n.includes("gray")) return true;
+            }
+            
+            // Coincidencia de subcadena básica
+            if (n.includes(c) || cat.includes(c) || sub.includes(c)) return true;
+            
+            // Coincidencia con flexibilización de género (ej: negro -> negra, blanco -> blanca)
+            const palabras = c.split(/\s+/).filter(Boolean);
+            return palabras.every(pal => {
+                if (pal.length > 3) {
+                    const base = pal.slice(0, -1);
+                    const ultimaLetra = pal.slice(-1);
+                    if (ultimaLetra === 'o' || ultimaLetra === 'a') {
+                        return n.includes(base + 'o') || n.includes(base + 'a') || 
+                               cat.includes(base + 'o') || cat.includes(base + 'a') ||
+                               sub.includes(base + 'o') || sub.includes(base + 'a');
+                    }
+                }
+                return n.includes(pal) || cat.includes(pal) || sub.includes(pal);
+            });
+        }
+
+        // Ejecutar búsqueda sobre el array global de productos
+        let resultadosBase = [];
+        if (queryBusqueda) {
+            resultadosBase = productos.filter(p => coincideBusqueda(p.nombre, p.categoria, p.subcategoria, queryBusqueda));
+        }
+
+        let resultadosFiltrados = [...resultadosBase];
+        let filtroCategoriaActivo = 'todas';
+
+        const gridBusqueda = document.getElementById('gridBusqueda');
+        const ordenarSelect = document.getElementById('ordenarSelect');
+        const filtroBtns = document.querySelectorAll('.filtro-btn');
+        const filtrosBar = document.getElementById('filtrosBarBusqueda');
+        const searchTitle = document.getElementById('searchTitle');
+        const searchSub = document.getElementById('searchSub');
+
+        // Renderizar los productos encontrados
+        function renderizarResultados(lista) {
+            gridBusqueda.innerHTML = '';
+            
+            if (lista.length === 0) {
+                gridBusqueda.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; color: #777; padding: 60px 20px;">
+                        <p style="font-size: 18px; font-weight: 500; margin-bottom: 15px;">No encontramos resultados para tu búsqueda.</p>
+                        <p style="font-size: 14px;">Intenta con otras palabras clave o navega por nuestras categorías.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            lista.forEach(prod => {
+                const div = document.createElement('div');
+                div.className = 'producto';
+                
+                const precioFormateado = new Intl.NumberFormat('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 0
+                }).format(prod.precio).replace("ARS", "$");
+                
+                div.innerHTML = `
+                    <div class="producto-img-container">
+                        <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy">
+                        ${prod.stock <= 0 ? '<span class="stock-badge sin-stock">Sin stock</span>' : (prod.stock === 1 ? '<span class="stock-badge ultimas">Última</span>' : (prod.stock <= 5 ? '<span class="stock-badge ultimas">Últimas</span>' : ''))}
+                        <button class="btn-agregar" data-id="${prod.id}" ${prod.stock <= 0 ? 'disabled style="opacity:0.3;cursor:not-allowed;pointer-events:none;"' : ''}>${prod.stock <= 0 ? 'SIN STOCK' : 'AGREGAR AL CARRITO'}</button>
+                    </div>
+                    <h4>${prod.nombre}</h4>
+                    <p style="font-size: 12px; color: #777; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">${prod.categoria}</p>
+                    <p>${precioFormateado}</p>
+                `;
+                gridBusqueda.appendChild(div);
+            });
+            
+            // Evento agregar al carrito
+            const botonesAgregar = gridBusqueda.querySelectorAll('.btn-agregar');
+            botonesAgregar.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = e.target.getAttribute('data-id');
+                    if (typeof abrirModalProducto === 'function') {
+                        abrirModalProducto(id);
+                    }
+                });
+            });
+
+            // Click en producto abre modal detalle
+            gridBusqueda.querySelectorAll('.producto').forEach((el, idx) => {
+                el.addEventListener('click', () => {
+                    if (typeof abrirModalProducto === 'function') {
+                        abrirModalProducto(lista[idx].id);
+                    }
+                });
+            });
+        }
+
+        // Eventos de Filtrado por Categoría
+        filtroBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filtroBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                filtroCategoriaActivo = e.target.getAttribute('data-cat');
+                aplicarFiltrosYOrden();
+            });
+        });
+
+        // Evento Ordenamiento
+        ordenarSelect.addEventListener('change', () => {
+            aplicarFiltrosYOrden();
+        });
+
+        // Combinar Filtros y Ordenamiento
+        function aplicarFiltrosYOrden() {
+            // 1. Filtrar por categoría
+            if (filtroCategoriaActivo === 'todas') {
+                resultadosFiltrados = [...resultadosBase];
+            } else {
+                resultadosFiltrados = resultadosBase.filter(p => p.categoria === filtroCategoriaActivo);
+            }
+            
+            // 2. Ordenar por precio
+            const orden = ordenarSelect.value;
+            if (orden === 'menor') {
+                resultadosFiltrados.sort((a, b) => a.precio - b.precio);
+            } else if (orden === 'mayor') {
+                resultadosFiltrados.sort((a, b) => b.precio - a.precio);
+            }
+            
+            renderizarResultados(resultadosFiltrados);
+        }
+
+        // Carga inicial y títulos dinámicos
+        document.addEventListener('DOMContentLoaded', () => {
+            if (queryBusqueda) {
+                const querySanitized = queryBusqueda.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                searchTitle.textContent = `Búsqueda: "${querySanitized}"`;
+                searchSub.textContent = `Se encontraron ${resultadosBase.length} productos coincidentes.`;
+                
+                if (resultadosBase.length > 0) {
+                    filtrosBar.style.display = 'flex';
+                }
+                
+                renderizarResultados(resultadosBase);
+            } else {
+                searchTitle.textContent = "Búsqueda";
+                searchSub.textContent = "Escribe en el buscador del menú superior para encontrar productos.";
+                renderizarResultados([]);
+            }
+        });
+    </script>
+</body>
+</html>

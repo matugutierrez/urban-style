@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - Urban Style</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="top-bar">
+        <span>ENVÍOS A TODO EL PAÍS</span>
+        <span>CAMBIOS SIN CARGO</span>
+        <span>HASTA 6 CUOTAS</span>
+    </div>
+
+    <header>
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: black;">URBAN</a>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="soporte.html">Soporte</a>
+        </nav>
+        <div class="icons">
+            <a href="#" id="btnBuscar">Buscar</a>
+            <a href="login.html">Mi cuenta</a>
+            <a href="carrito.html">🛒</a>
+        </div>
+        <div class="search-menu">
+            <span class="close-search">✕</span>
+            <input type="text" placeholder="¿Qué estás buscando?" class="search-input">
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="accesorios.html">Accesorios</a>
+        </div>
+    </header>
+
+    <section class="auth-section">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
+                <button class="auth-tab" id="tabRegister">Crear Cuenta</button>
+            </div>
+
+            <form class="auth-form active" id="formLogin">
+                <h2>Iniciar Sesión</h2>
+                <div class="auth-campos">
+                    <div class="campo">
+                        <label>Email</label>
+                        <input type="text" id="loginEmail" required placeholder="correo@ejemplo.com" inputmode="email">
+                    </div>
+                    <div class="campo">
+                        <label>Contraseña</label>
+                        <div class="input-password">
+                            <input type="password" id="loginPassword" required placeholder="••••••••">
+                            <button type="button" class="password-toggle eye-crossed" data-target="loginPassword" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth">INGRESAR</button>
+                <p class="auth-error" id="loginError"></p>
+                <div class="auth-recovery-links">
+                    <a href="#" id="linkRecuperarEmail">¿Olvidaste tu email?</a>
+                    <span class="recovery-sep">|</span>
+                    <a href="#" id="linkRecuperarPass">¿Olvidaste tu contraseña?</a>
+                </div>
+            </form>
+
+            <form class="auth-form" id="formRegister">
+                <h2>Crear Cuenta</h2>
+                <div class="auth-campos">
+                    <div class="campo">
+                        <label>Nombre completo</label>
+                        <input type="text" id="regNombre" required placeholder="Juan Pérez">
+                    </div>
+                    <div class="campo">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="campo">
+                        <label>DNI</label>
+                        <input type="text" id="regDni" required placeholder="12345678" pattern="[0-9]{7,9}" title="Ingresá tu DNI sin puntos (7 a 9 dígitos)">
+                    </div>
+                    <div class="campo">
+                        <label>Contraseña</label>
+                        <div class="input-password">
+                            <input type="password" id="regPassword" required minlength="6" placeholder="Mínimo 6 caracteres">
+                            <button type="button" class="password-toggle eye-crossed" data-target="regPassword" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Confirmar contraseña</label>
+                        <div class="input-password">
+                            <input type="password" id="regConfirm" required placeholder="Repetir contraseña">
+                            <button type="button" class="password-toggle eye-crossed" data-target="regConfirm" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth">CREAR CUENTA</button>
+                <p class="auth-error" id="registerError"></p>
+            </form>
+
+            <div class="auth-verify" id="authVerify" style="display: none;">
+                <span class="verify-icon">📧</span>
+                <h2>Verificá tu email</h2>
+                <p class="verify-desc">Te enviamos un código a<br><strong id="verifyEmail">correo@ejemplo.com</strong></p>
+                <div class="code-inputs">
+                    <input type="text" maxlength="1" class="code-input" id="code1" inputmode="text" autocomplete="off">
+                    <input type="text" maxlength="1" class="code-input" id="code2" inputmode="text" autocomplete="off">
+                    <input type="text" maxlength="1" class="code-input" id="code3" inputmode="text" autocomplete="off">
+                    <input type="text" maxlength="1" class="code-input" id="code4" inputmode="text" autocomplete="off">
+                    <input type="text" maxlength="1" class="code-input" id="code5" inputmode="text" autocomplete="off">
+                    <input type="text" maxlength="1" class="code-input" id="code6" inputmode="text" autocomplete="off">
+                </div>
+                <button type="button" class="btn-auth" id="btnVerificar">VERIFICAR</button>
+                <p class="verify-error" id="verifyError"></p>
+                <p class="verify-reenviar" id="verifyReenviar">
+                    ¿No recibiste el código?
+                    <a href="#" id="btnReenviar">Reenviar</a>
+                </p>
+                <p class="verify-reenviar" style="margin-top:8px;">
+                    <a href="#" id="btnVolverLogin">Volver a Iniciar Sesión</a>
+                </p>
+            </div>
+
+            <div class="auth-recover" id="authRecover" style="display: none;">
+                <span class="recover-icon" id="recoverIcon">🔐</span>
+                <h2 id="recoverTitle">Recuperar cuenta</h2>
+                <p class="recover-desc" id="recoverDesc"></p>
+
+                <!-- Step 1a: DNI (forgot email) -->
+                <div class="recover-step" id="recoverStepDni">
+                    <div class="campo">
+                        <label>DNI</label>
+                        <input type="text" id="recoverDni" required placeholder="12345678" pattern="[0-9]{7,9}">
+                    </div>
+                    <button type="button" class="btn-auth" id="btnRecuperarDni">ENVIAR CÓDIGO</button>
+                    <p class="auth-error" id="recoverDniError"></p>
+                </div>
+
+                <!-- Step 1b: Email (forgot password) -->
+                <div class="recover-step" id="recoverStepEmail" style="display:none;">
+                    <div class="campo">
+                        <label>Email</label>
+                        <input type="email" id="recoverEmailInput" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <button type="button" class="btn-auth" id="btnRecuperarEmail">ENVIAR CÓDIGO</button>
+                    <p class="auth-error" id="recoverEmailError"></p>
+                </div>
+
+                <!-- Step contact: when DNI not found -->
+                <div class="recover-step" id="recoverStepContact" style="display:none;">
+                    <span style="font-size:36px;display:block;margin-bottom:8px;">💬</span>
+                    <h3 style="font-size:17px;margin-bottom:4px;">No recordás tu DNI</h3>
+                    <p style="font-size:13px;color:#666;margin-bottom:16px;">Dejanos un email alternativo y te contactamos para ayudarte.</p>
+                    <div class="campo">
+                        <label>Email alternativo</label>
+                        <input type="email" id="contactEmail" required placeholder="tu@email.com">
+                    </div>
+                    <div class="campo" style="margin-top:10px;">
+                        <label>Mensaje (opcional)</label>
+                        <textarea id="contactMensaje" rows="2" placeholder="Contanos qué pasó..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:13px;resize:none;"></textarea>
+                    </div>
+                    <button type="button" class="btn-auth" id="btnContactar">ENVIAR CONSULTA</button>
+                    <p class="auth-error" id="contactError"></p>
+                </div>
+
+                <!-- Step contact success -->
+                <div class="recover-step" id="recoverStepContactOk" style="display:none;">
+                    <span style="font-size:48px;display:block;margin-bottom:8px;">📬</span>
+                    <h3 style="font-size:17px;margin-bottom:4px;">¡Mensaje enviado!</h3>
+                    <p style="font-size:13px;color:#666;">Te vamos a contactar a la brevedad al email que nos dejaste.</p>
+                </div>
+
+                <!-- Step 2: Verify code only -->
+                <div class="recover-step" id="recoverStep2" style="display: none;">
+                    <p style="font-size:13px;color:#666;margin-bottom:16px;">Ingresá el código que enviamos a tu email</p>
+                    <div class="code-inputs recover-code-inputs">
+                        <input type="text" maxlength="1" class="code-input recover-code" inputmode="text" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-input recover-code" inputmode="text" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-input recover-code" inputmode="text" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-input recover-code" inputmode="text" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-input recover-code" inputmode="text" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-input recover-code" inputmode="text" autocomplete="off">
+                    </div>
+                    <button type="button" class="btn-auth" id="btnVerificarCodigoRecuperacion" style="margin-top:16px;">VERIFICAR CÓDIGO</button>
+                    <p class="auth-error" id="recoverCodeError"></p>
+                </div>
+
+                <!-- Step 2b: New password (after code verified) -->
+                <div class="recover-step" id="recoverStep2b" style="display: none;">
+                    <span style="font-size:28px;display:block;margin-bottom:4px;">✅</span>
+                    <p style="font-size:13px;color:#666;margin-bottom:16px;">Código verificado. Ahora creá una nueva contraseña.</p>
+                    <div class="campo">
+                        <label>Nueva contraseña</label>
+                        <div class="input-password">
+                            <input type="password" id="recoverPassword" required minlength="6" placeholder="Mínimo 6 caracteres">
+                            <button type="button" class="password-toggle eye-crossed" data-target="recoverPassword" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Confirmar contraseña</label>
+                        <div class="input-password">
+                            <input type="password" id="recoverConfirm" required placeholder="Repetir contraseña">
+                            <button type="button" class="password-toggle eye-crossed" data-target="recoverConfirm" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-auth" id="btnCambiarPassword">CAMBIAR CONTRASEÑA</button>
+                    <p class="auth-error" id="recoverPasswordError"></p>
+                </div>
+
+                <!-- Step 3: Success -->
+                <div class="recover-step" id="recoverStep3" style="display: none;">
+                    <span style="font-size:48px;display:block;margin-bottom:8px;">✅</span>
+                    <h3 id="recoverSuccessTitle">¡Todo listo!</h3>
+                    <p id="recoverSuccessText" style="color:#666;font-size:14px;margin-bottom:8px;"></p>
+                    <p id="recoverSuccessEmail" style="font-weight:700;font-size:16px;margin-bottom:16px;"></p>
+                    <button type="button" class="btn-auth" id="btnRecoverVolverLogin">IR A INICIAR SESIÓN</button>
+                </div>
+
+                <p class="verify-reenviar" style="margin-top:16px;">
+                    <a href="#" id="btnVolverLoginRecover">Volver a Iniciar Sesión</a>
+                </p>
+            </div>
+
+            <div class="auth-profile" id="authProfile" style="display: none;">
+                <div class="profile-header">
+                    <span class="profile-avatar">👤</span>
+                    <h2 id="profileNombre">Usuario</h2>
+                    <p id="profileEmail">correo@ejemplo.com</p>
+                </div>
+                <div class="profile-tabs">
+                    <button class="profile-tab active" data-tab="datos">Mis Datos</button>
+                    <button class="profile-tab" data-tab="pedidos">Mis Pedidos</button>
+                </div>
+                <div class="profile-panel active" id="panelDatos">
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <label>Nombre completo</label>
+                            <input type="text" id="pNombre" readonly value="-" class="perfil-input perfil-input-readonly">
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Email</label>
+                            <input type="email" id="pEmail" readonly value="-" class="perfil-input perfil-input-readonly">
+                        </div>
+                        <div class="profile-info-item">
+                            <label>DNI</label>
+                            <input type="text" id="pDni" readonly value="-" class="perfil-input perfil-input-readonly">
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Teléfono</label>
+                            <input type="tel" id="pTelefono" placeholder="11 1234-5678" class="perfil-input">
+                        </div>
+                        <div class="profile-info-item" style="grid-column: 1 / -1;">
+                            <label>Dirección</label>
+                            <input type="text" id="pDireccion" placeholder="Calle y número" class="perfil-input">
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Ciudad</label>
+                            <input type="text" id="pCiudad" placeholder="CABA" class="perfil-input">
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Provincia</label>
+                            <select id="pProvincia" class="perfil-input">
+                                <option value="">Seleccionar</option>
+                                <option value="Buenos Aires">Buenos Aires</option>
+                                <option value="CABA">CABA</option>
+                                <option value="Catamarca">Catamarca</option>
+                                <option value="Chaco">Chaco</option>
+                                <option value="Chubut">Chubut</option>
+                                <option value="Córdoba">Córdoba</option>
+                                <option value="Corrientes">Corrientes</option>
+                                <option value="Entre Ríos">Entre Ríos</option>
+                                <option value="Formosa">Formosa</option>
+                                <option value="Jujuy">Jujuy</option>
+                                <option value="La Pampa">La Pampa</option>
+                                <option value="La Rioja">La Rioja</option>
+                                <option value="Mendoza">Mendoza</option>
+                                <option value="Misiones">Misiones</option>
+                                <option value="Neuquén">Neuquén</option>
+                                <option value="Río Negro">Río Negro</option>
+                                <option value="Salta">Salta</option>
+                                <option value="San Juan">San Juan</option>
+                                <option value="San Luis">San Luis</option>
+                                <option value="Santa Cruz">Santa Cruz</option>
+                                <option value="Santa Fe">Santa Fe</option>
+                                <option value="Santiago del Estero">Santiago del Estero</option>
+                                <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                <option value="Tucumán">Tucumán</option>
+                            </select>
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Código Postal</label>
+                            <input type="text" id="pCp" placeholder="1000" class="perfil-input">
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Piso / Depto</label>
+                            <input type="text" id="pPiso" placeholder="(opcional)" class="perfil-input">
+                        </div>
+                    </div>
+                    <button class="btn-guardar-perfil" id="btnGuardarDatos">GUARDAR CAMBIOS</button>
+                </div>
+                <div class="profile-panel" id="panelPedidos">
+                    <div id="pedidosContainer"></div>
+                </div>
+                <button class="btn-auth btn-cerrar-sesion" id="btnCerrarSesion">CERRAR SESIÓN</button>
+                <button class="btn-eliminar-cuenta" id="btnEliminarCuenta">ELIMINAR CUENTA</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-content">
+            <h1>¡BIENVENIDO</h1>
+            <h1>A URBAN!</h1>
+            <p id="welcomeName" style="margin-top: 20px;"></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>URBAN</h3>
+                <p>Streetwear premium con estilo urbano. Descubrí la nueva forma de vestir.</p>
+                <div class="footer-social">
+                    <a href="#">IG</a>
+                    <a href="#">WA</a>
+                    <a href="#">TK</a>
+                    <a href="#">YT</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <a href="remeras.html">Remeras</a>
+                <a href="buzos.html">Buzos</a>
+                <a href="pantalones.html">Pantalones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ayuda</h4>
+                <a href="soporte.html">Preguntas frecuentes</a>
+                <a href="soporte.html">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Recibí las últimas novedades y ofertas exclusivas.</p>
+                <form class="footer-form" onsubmit="return false;">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Urban — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ─── Password visibility toggle ───
+            document.querySelectorAll('.password-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const input = document.getElementById(btn.dataset.target);
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                    btn.classList.toggle('eye-crossed');
+                });
+            });
+
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const formLogin = document.getElementById('formLogin');
+            const formRegister = document.getElementById('formRegister');
+            const authVerify = document.getElementById('authVerify');
+            const authProfile = document.getElementById('authProfile');
+            const profileNombre = document.getElementById('profileNombre');
+            const profileEmail = document.getElementById('profileEmail');
+            const loginError = document.getElementById('loginError');
+            const registerError = document.getElementById('registerError');
+            const verifyError = document.getElementById('verifyError');
+            const verifyEmail = document.getElementById('verifyEmail');
+            const btnVerificar = document.getElementById('btnVerificar');
+            const btnReenviar = document.getElementById('btnReenviar');
+            const btnVolverLogin = document.getElementById('btnVolverLogin');
+            const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+            const codeInputs = document.querySelectorAll('.code-input');
+
+            let pendingEmail = '';
+
+            function mostrarVerificar(email) {
+                pendingEmail = email;
+                verifyEmail.textContent = email;
+                verifyError.textContent = '';
+                formLogin.classList.remove('active');
+                formRegister.classList.remove('active');
+                authVerify.classList.add('active');
+                authVerify.style.display = 'block';
+                document.querySelector('.auth-tabs').style.display = 'none';
+                authProfile.style.display = 'none';
+                codeInputs.forEach(inp => inp.value = '');
+                codeInputs[0].focus();
+            }
+
+            function formatearFecha(isoString) {
+                if (!isoString) return '-';
+                const d = new Date(isoString);
+                const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+                return `${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+            }
+
+            function actualizarUI() {
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                if (usuario) {
+                    formLogin.classList.remove('active');
+                    formRegister.classList.remove('active');
+                    authVerify.classList.remove('active');
+                    authVerify.style.display = 'none';
+                    document.querySelector('.auth-tabs').style.display = 'none';
+                    authProfile.style.display = 'block';
+                    document.getElementById('profileNombre').textContent = usuario.nombre;
+                    document.getElementById('profileEmail').textContent = usuario.email;
+                    document.getElementById('pNombre').value = usuario.nombre;
+                    document.getElementById('pEmail').value = usuario.email;
+                    document.getElementById('pDni').value = usuario.dni || '-';
+                    const datosEnvio = usuario.datosEnvio || {};
+                    document.getElementById('pTelefono').value = datosEnvio.telefono || '';
+                    document.getElementById('pDireccion').value = datosEnvio.direccion || '';
+                    document.getElementById('pCiudad').value = datosEnvio.ciudad || '';
+                    document.getElementById('pProvincia').value = datosEnvio.provincia || '';
+                    document.getElementById('pCp').value = datosEnvio.cp || '';
+                    document.getElementById('pPiso').value = datosEnvio.piso || '';
+                } else {
+                    formLogin.classList.add('active');
+                    formRegister.classList.remove('active');
+                    authVerify.classList.remove('active');
+                    authVerify.style.display = 'none';
+                    document.querySelector('.auth-tabs').style.display = 'flex';
+                    authProfile.style.display = 'none';
+                    tabLogin.classList.add('active');
+                    tabRegister.classList.remove('active');
+                }
+            }
+
+            document.getElementById('btnGuardarDatos').addEventListener('click', () => {
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                if (!usuario) return;
+                const datos = {
+                    telefono: document.getElementById('pTelefono').value.trim(),
+                    direccion: document.getElementById('pDireccion').value.trim(),
+                    ciudad: document.getElementById('pCiudad').value.trim(),
+                    provincia: document.getElementById('pProvincia').value,
+                    cp: document.getElementById('pCp').value.trim(),
+                    piso: document.getElementById('pPiso').value.trim(),
+                };
+                usuario.datosEnvio = datos;
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+                const token = localStorage.getItem('token');
+                if (token) {
+                    fetch('/api/perfil', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify(datos)
+                    }).catch(() => {});
+                }
+                const btn = document.getElementById('btnGuardarDatos');
+                btn.textContent = 'GUARDADO ✓';
+                btn.style.opacity = '0.6';
+                setTimeout(() => { btn.textContent = 'GUARDAR CAMBIOS'; btn.style.opacity = '1'; }, 2000);
+            });
+
+            // ─── AUTO-AVANCE ENTRE INPUTS ───
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    input.value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                    if (input.value && index < 5) {
+                        codeInputs[index + 1].focus();
+                    }
+                    if (index === 5 && input.value) {
+                        btnVerificar.click();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                    if (e.key === 'Enter') {
+                        btnVerificar.click();
+                    }
+                });
+                input.addEventListener('focus', () => {
+                    input.select();
+                });
+            });
+
+            // ─── PEGAR CÓDIGO COMPLETO ───
+            codeInputs[0].addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                for (let i = 0; i < Math.min(paste.length, 6); i++) {
+                    codeInputs[i].value = paste[i];
+                }
+                const next = Math.min(paste.length, 5);
+                codeInputs[next].focus();
+                if (paste.length >= 6) {
+                    btnVerificar.click();
+                }
+            });
+
+            tabLogin.addEventListener('click', () => {
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                formLogin.classList.add('active');
+                formRegister.classList.remove('active');
+                authVerify.classList.remove('active');
+                authVerify.style.display = 'none';
+                loginError.textContent = '';
+                registerError.textContent = '';
+            });
+
+            tabRegister.addEventListener('click', () => {
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+                formRegister.classList.add('active');
+                formLogin.classList.remove('active');
+                authVerify.classList.remove('active');
+                authVerify.style.display = 'none';
+                loginError.textContent = '';
+                registerError.textContent = '';
+            });
+
+            formRegister.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                registerError.textContent = '';
+
+                const nombre = document.getElementById('regNombre').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const dni = document.getElementById('regDni').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const confirm = document.getElementById('regConfirm').value;
+
+                if (!nombre || !email || !dni || !password || !confirm) {
+                    registerError.textContent = 'Completá todos los campos.';
+                    return;
+                }
+                if (!/^\d{7,9}$/.test(dni)) {
+                    registerError.textContent = 'El DNI debe tener entre 7 y 9 dígitos numéricos.';
+                    return;
+                }
+                if (password.length < 6) {
+                    registerError.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                    return;
+                }
+                if (password !== confirm) {
+                    registerError.textContent = 'Las contraseñas no coinciden.';
+                    return;
+                }
+
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.textContent = 'CREANDO...';
+
+                try {
+                    const res = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, email, dni, password }),
+                    });
+                    const data = await res.json();
+                    if (data.exito && data.necesitaVerificar) {
+                        document.getElementById('regNombre').value = '';
+                        document.getElementById('regEmail').value = '';
+                        document.getElementById('regDni').value = '';
+                        document.getElementById('regPassword').value = '';
+                        document.getElementById('regConfirm').value = '';
+                        mostrarVerificar(data.email);
+                    } else if (data.exito) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                        actualizarUI();
+                    } else {
+                        registerError.textContent = data.error || 'Error al crear la cuenta.';
+                    }
+                } catch {
+                    registerError.textContent = 'Error de conexión con el servidor.';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'CREAR CUENTA';
+                }
+            });
+
+            formLogin.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                loginError.textContent = '';
+
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+
+                if (!email || !password) {
+                    loginError.textContent = 'Completá todos los campos.';
+                    return;
+                }
+
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.textContent = 'INGRESANDO...';
+
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        if (data.esAdmin) {
+                            localStorage.setItem('adminToken', data.adminToken);
+                            window.location.href = 'admin.html';
+                            return;
+                        }
+                        const oldUsuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+                        const oldEnvio = oldUsuario.datosEnvio;
+                        if (oldEnvio && data.usuario.datosEnvio && Object.keys(data.usuario.datosEnvio).length === 0) {
+                            data.usuario.datosEnvio = oldEnvio;
+                        }
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                        actualizarUI();
+                        document.getElementById('loginEmail').value = '';
+                        document.getElementById('loginPassword').value = '';
+                    } else {
+                        loginError.textContent = data.error || 'Email o contraseña incorrectos.';
+                    }
+                } catch {
+                    loginError.textContent = 'Error de conexión con el servidor.';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'INGRESAR';
+                }
+            });
+
+            btnCerrarSesion.addEventListener('click', () => {
+                localStorage.removeItem('usuario');
+                localStorage.removeItem('token');
+                actualizarUI();
+            });
+
+            // ─── VERIFICAR CÓDIGO ───
+            btnVerificar.addEventListener('click', async () => {
+                verifyError.textContent = '';
+                const codigo = Array.from(codeInputs).map(inp => inp.value).join('');
+                if (codigo.length < 6) {
+                    verifyError.textContent = 'Ingresá el código completo.';
+                    return;
+                }
+                btnVerificar.disabled = true;
+                btnVerificar.textContent = 'VERIFICANDO...';
+                try {
+                    const res = await fetch('/api/verificar-codigo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingEmail, codigo }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                        // Mostrar welcome overlay antes del perfil
+                        const overlay = document.getElementById('welcomeOverlay');
+                        const welcomeName = document.getElementById('welcomeName');
+                        welcomeName.textContent = data.usuario.nombre;
+                        overlay.classList.add('active');
+                        await new Promise(r => setTimeout(r, 3000));
+                        overlay.classList.add('fade-out');
+                        await new Promise(r => setTimeout(r, 600));
+                        overlay.classList.remove('active', 'fade-out');
+                        actualizarUI();
+                    } else {
+                        verifyError.textContent = data.error || 'Código incorrecto.';
+                        codeInputs.forEach(inp => inp.value = '');
+                        codeInputs[0].focus();
+                    }
+                } catch {
+                    verifyError.textContent = 'Error de conexión con el servidor.';
+                } finally {
+                    btnVerificar.disabled = false;
+                    btnVerificar.textContent = 'VERIFICAR';
+                }
+            });
+
+            // ─── REENVIAR CÓDIGO ───
+            btnReenviar.addEventListener('click', async (e) => {
+                e.preventDefault();
+                verifyError.textContent = '';
+                btnReenviar.style.pointerEvents = 'none';
+                btnReenviar.textContent = 'ENVIANDO...';
+                try {
+                    const res = await fetch('/api/reenviar-codigo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingEmail }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        verifyError.textContent = '';
+                        verifyError.style.color = '#27ae60';
+                        verifyError.textContent = 'Código reenviado con éxito.';
+                        setTimeout(() => { verifyError.style.color = '#e74c3c'; }, 2000);
+                    } else {
+                        verifyError.textContent = data.error || 'Error al reenviar.';
+                    }
+                } catch {
+                    verifyError.textContent = 'Error de conexión.';
+                } finally {
+                    btnReenviar.style.pointerEvents = 'auto';
+                    btnReenviar.textContent = 'Reenviar';
+                }
+            });
+
+            // ─── VOLVER A LOGIN ───
+            btnVolverLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                authVerify.classList.remove('active');
+                authVerify.style.display = 'none';
+                document.querySelector('.auth-tabs').style.display = 'flex';
+                formLogin.classList.add('active');
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+            });
+
+            // ─── RECUPERAR EMAIL / CONTRASEÑA ───
+            let recoveryMode = 'email';
+            let recoveryIdentificador = '';
+
+            function mostrarRecuperar(mode) {
+                recoveryMode = mode;
+                recoveryIdentificador = '';
+                const icon = document.getElementById('recoverIcon');
+                const title = document.getElementById('recoverTitle');
+                const desc = document.getElementById('recoverDesc');
+
+                if (mode === 'email') {
+                    icon.textContent = '🔐';
+                    title.textContent = 'Recuperar email';
+                    desc.textContent = 'Ingresá tu DNI para recibir un código y recuperar tu email.';
+                } else {
+                    icon.textContent = '🔑';
+                    title.textContent = 'Recuperar contraseña';
+                    desc.textContent = 'Ingresá tu email para recibir un código y crear una nueva contraseña.';
+                }
+
+                formLogin.classList.remove('active');
+                formRegister.classList.remove('active');
+                authVerify.classList.remove('active');
+                authVerify.style.display = 'none';
+                authProfile.style.display = 'none';
+                document.querySelector('.auth-tabs').style.display = 'none';
+                document.getElementById('authRecover').style.display = 'block';
+
+                // Mostrar step correcto
+                document.getElementById('recoverStepDni').style.display = mode === 'email' ? 'block' : 'none';
+                document.getElementById('recoverStepEmail').style.display = mode === 'pass' ? 'block' : 'none';
+                document.getElementById('recoverStepContact').style.display = 'none';
+                document.getElementById('recoverStepContactOk').style.display = 'none';
+                document.getElementById('recoverStep2').style.display = 'none';
+                document.getElementById('recoverStep3').style.display = 'none';
+
+                document.getElementById('recoverDni').value = '';
+                document.getElementById('recoverEmailInput').value = '';
+                document.getElementById('recoverDniError').textContent = '';
+                document.getElementById('recoverEmailError').textContent = '';
+                document.getElementById('recoverCodeError').textContent = '';
+                document.getElementById('recoverPasswordError').textContent = '';
+                document.getElementById('recoverPassword').value = '';
+                document.getElementById('recoverConfirm').value = '';
+                document.getElementById('recoverStep2b').style.display = 'none';
+                document.querySelectorAll('.recover-code').forEach(inp => inp.value = '');
+            }
+
+            document.getElementById('linkRecuperarEmail').addEventListener('click', (e) => {
+                e.preventDefault();
+                mostrarRecuperar('email');
+            });
+            document.getElementById('linkRecuperarPass').addEventListener('click', (e) => {
+                e.preventDefault();
+                mostrarRecuperar('pass');
+            });
+
+            document.getElementById('btnVolverLoginRecover').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('authRecover').style.display = 'none';
+                document.querySelector('.auth-tabs').style.display = 'flex';
+                formLogin.classList.add('active');
+                tabLogin.classList.add('active');
+            });
+
+            // Auto-advance for recovery code inputs
+            document.querySelectorAll('.recover-code').forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    input.value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                    if (input.value && index < 5) {
+                        document.querySelectorAll('.recover-code')[index + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        document.querySelectorAll('.recover-code')[index - 1].focus();
+                    }
+                    if (e.key === 'Enter') {
+                        document.getElementById('btnVerificarCodigoRecuperacion').click();
+                    }
+                });
+            });
+
+            // Step 1a: Send code via DNI (forgot email)
+            document.getElementById('btnRecuperarDni').addEventListener('click', async () => {
+                const dni = document.getElementById('recoverDni').value.trim();
+                const errorEl = document.getElementById('recoverDniError');
+                errorEl.textContent = '';
+
+                if (!dni || !/^\d{7,9}$/.test(dni)) {
+                    errorEl.textContent = 'Ingresá un DNI válido (7 a 9 dígitos).';
+                    return;
+                }
+
+                const btn = document.getElementById('btnRecuperarDni');
+                btn.disabled = true;
+                btn.textContent = 'ENVIANDO...';
+
+                try {
+                    const res = await fetch('/api/recuperar-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ dni }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        recoveryIdentificador = dni;
+                        document.getElementById('recoverStepDni').style.display = 'none';
+                        document.getElementById('recoverStep2').style.display = 'block';
+                        document.querySelectorAll('.recover-code')[0].focus();
+                    } else {
+                        errorEl.textContent = data.error || 'Error al enviar el código.';
+                        if (data.contactar) {
+                            document.getElementById('recoverStepDni').style.display = 'none';
+                            document.getElementById('recoverStepContact').style.display = 'block';
+                        }
+                        btn.disabled = false;
+                        btn.textContent = 'ENVIAR CÓDIGO';
+                    }
+                } catch {
+                    errorEl.textContent = 'Error de conexión con el servidor.';
+                    btn.disabled = false;
+                    btn.textContent = 'ENVIAR CÓDIGO';
+                }
+            });
+
+            // Step 1b: Send code via email (forgot password)
+            document.getElementById('btnRecuperarEmail').addEventListener('click', async () => {
+                const email = document.getElementById('recoverEmailInput').value.trim();
+                const errorEl = document.getElementById('recoverEmailError');
+                errorEl.textContent = '';
+
+                if (!email || !email.includes('@')) {
+                    errorEl.textContent = 'Ingresá un email válido.';
+                    return;
+                }
+
+                const btn = document.getElementById('btnRecuperarEmail');
+                btn.disabled = true;
+                btn.textContent = 'ENVIANDO...';
+
+                try {
+                    const res = await fetch('/api/recuperar-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        recoveryIdentificador = email;
+                        document.getElementById('recoverStepEmail').style.display = 'none';
+                        document.getElementById('recoverStep2').style.display = 'block';
+                        document.querySelectorAll('.recover-code')[0].focus();
+                    } else {
+                        errorEl.textContent = data.error || 'Error al enviar el código.';
+                        btn.disabled = false;
+                        btn.textContent = 'ENVIAR CÓDIGO';
+                    }
+                } catch {
+                    errorEl.textContent = 'Error de conexión con el servidor.';
+                    btn.disabled = false;
+                    btn.textContent = 'ENVIAR CÓDIGO';
+                }
+            });
+
+            // Contact form: send query to company
+            document.getElementById('btnContactar').addEventListener('click', async () => {
+                const emailAlt = document.getElementById('contactEmail').value.trim();
+                const mensaje = document.getElementById('contactMensaje').value.trim();
+                const errorEl = document.getElementById('contactError');
+                errorEl.textContent = '';
+
+                if (!emailAlt || !emailAlt.includes('@')) {
+                    errorEl.textContent = 'Ingresá un email de contacto válido.';
+                    return;
+                }
+
+                const btn = document.getElementById('btnContactar');
+                btn.disabled = true;
+                btn.textContent = 'ENVIANDO...';
+
+                try {
+                    const res = await fetch('/api/contactar-dni', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ emailAlternativo: emailAlt, mensaje }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        document.getElementById('recoverStepContact').style.display = 'none';
+                        document.getElementById('recoverStepContactOk').style.display = 'block';
+                    } else {
+                        errorEl.textContent = data.error || 'Error al enviar.';
+                        btn.disabled = false;
+                        btn.textContent = 'ENVIAR CONSULTA';
+                    }
+                } catch {
+                    errorEl.textContent = 'Error de conexión con el servidor.';
+                    btn.disabled = false;
+                    btn.textContent = 'ENVIAR CONSULTA';
+                }
+            });
+
+            // Step 2: Verify code only (no password yet)
+            document.getElementById('btnVerificarCodigoRecuperacion').addEventListener('click', async () => {
+                const codigo = Array.from(document.querySelectorAll('.recover-code')).map(inp => inp.value).join('');
+                const errorEl = document.getElementById('recoverCodeError');
+                errorEl.textContent = '';
+
+                if (codigo.length < 6) {
+                    errorEl.textContent = 'Ingresá el código completo.';
+                    return;
+                }
+
+                const btn = document.getElementById('btnVerificarCodigoRecuperacion');
+                btn.disabled = true;
+                btn.textContent = 'VERIFICANDO...';
+
+                try {
+                    const res = await fetch('/api/verificar-recuperacion', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            identificador: recoveryIdentificador,
+                            tipo: recoveryMode === 'email' ? 'dni' : 'email',
+                            codigo,
+                        }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        document.getElementById('recoverStep2').style.display = 'none';
+                        document.getElementById('recoverStep2b').style.display = 'block';
+                        document.getElementById('recoverPassword').focus();
+                    } else {
+                        errorEl.textContent = data.error || 'Error al verificar.';
+                        if (data.error && data.error.includes('expir')) {
+                            document.querySelectorAll('.recover-code').forEach(inp => inp.value = '');
+                            document.querySelectorAll('.recover-code')[0].focus();
+                        }
+                        btn.disabled = false;
+                        btn.textContent = 'VERIFICAR CÓDIGO';
+                    }
+                } catch {
+                    errorEl.textContent = 'Error de conexión con el servidor.';
+                    btn.disabled = false;
+                    btn.textContent = 'VERIFICAR CÓDIGO';
+                }
+            });
+
+            // Step 2b: Set new password (code already verified)
+            document.getElementById('btnCambiarPassword').addEventListener('click', async () => {
+                const codigo = Array.from(document.querySelectorAll('.recover-code')).map(inp => inp.value).join('');
+                const password = document.getElementById('recoverPassword').value;
+                const confirm = document.getElementById('recoverConfirm').value;
+                const errorEl = document.getElementById('recoverPasswordError');
+                errorEl.textContent = '';
+
+                if (password.length < 6) {
+                    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                    return;
+                }
+                if (password !== confirm) {
+                    errorEl.textContent = 'Las contraseñas no coinciden.';
+                    return;
+                }
+
+                const btn = document.getElementById('btnCambiarPassword');
+                btn.disabled = true;
+                btn.textContent = 'CAMBIANDO...';
+
+                try {
+                    const res = await fetch('/api/verificar-recuperacion', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            identificador: recoveryIdentificador,
+                            tipo: recoveryMode === 'email' ? 'dni' : 'email',
+                            codigo,
+                            nuevaPassword: password,
+                        }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        document.getElementById('recoverStep2b').style.display = 'none';
+                        document.getElementById('recoverStep3').style.display = 'block';
+                        if (recoveryMode === 'email') {
+                            document.getElementById('recoverSuccessTitle').textContent = '¡Email recuperado!';
+                            document.getElementById('recoverSuccessText').textContent = 'Tu email asociado es:';
+                            document.getElementById('recoverSuccessEmail').textContent = data.email;
+                        } else {
+                            document.getElementById('recoverSuccessTitle').textContent = '¡Contraseña actualizada!';
+                            document.getElementById('recoverSuccessText').textContent = 'Tu contraseña se cambió correctamente.';
+                            document.getElementById('recoverSuccessEmail').textContent = '';
+                        }
+                    } else {
+                        errorEl.textContent = data.error || 'Error al cambiar.';
+                        btn.disabled = false;
+                        btn.textContent = 'CAMBIAR CONTRASEÑA';
+                    }
+                } catch {
+                    errorEl.textContent = 'Error de conexión con el servidor.';
+                    btn.disabled = false;
+                    btn.textContent = 'CAMBIAR CONTRASEÑA';
+                }
+            });
+
+            document.getElementById('btnRecoverVolverLogin').addEventListener('click', () => {
+                document.getElementById('authRecover').style.display = 'none';
+                document.querySelector('.auth-tabs').style.display = 'flex';
+                formLogin.classList.add('active');
+                tabLogin.classList.add('active');
+            });
+
+            // ─── PROFILE TABS ───
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.profile-panel').forEach(p => p.classList.remove('active'));
+                    tab.classList.add('active');
+                    const panelId = 'panel' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1);
+                    document.getElementById(panelId).classList.add('active');
+                    if (tab.dataset.tab === 'pedidos') cargarPedidos();
+                });
+            });
+
+            async function cargarPedidos() {
+                const container = document.getElementById('pedidosContainer');
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                if (!usuario || !usuario.email) {
+                    container.innerHTML = '<div class="profile-pedidos-empty"><span>📦</span><p>Iniciá sesión para ver tus pedidos.</p></div>';
+                    return;
+                }
+                try {
+                    const res = await fetch(`/api/orders?email=${encodeURIComponent(usuario.email)}`);
+                    const ordenes = await res.json();
+                    if (!ordenes || ordenes.length === 0) {
+                        container.innerHTML = '<div class="profile-pedidos-empty"><span>📦</span><p>Todavía no realizaste ninguna compra.</p><p style="font-size:12px;color:#bbb;margin-top:12px;">Tus pedidos aparecerán acá cuando hagas tu primera compra.</p></div>';
+                        return;
+                    }
+                    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+                    ordenes.forEach(o => {
+                        const estado = o.pagoVerificado
+                            ? '<span style="background:#e8f5e9;color:#27ae60;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;">✔ Pagado</span>'
+                            : o.estado === 'pending_verification'
+                            ? '<span style="background:#fff8e1;color:#f57c00;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;">⏳ Pendiente</span>'
+                            : '<span style="background:#f5f5f5;color:#999;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;">○ Pendiente</span>';
+                        const fecha = new Date(o.fecha);
+                        const fechaStr = fecha.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+                        const itemsLista = o.items.map(i => `${i.nombre} x${i.cantidad}`).join(', ');
+                        html += `
+                            <div style="border:1px solid #eee;border-radius:10px;padding:16px;background:#fafafa;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                    <span style="font-weight:700;font-size:13px;letter-spacing:0.3px;">#${o.id}</span>
+                                    ${estado}
+                                </div>
+                                <p style="font-size:12px;color:#999;margin-bottom:6px;">${fechaStr}</p>
+                                <p style="font-size:13px;color:#555;margin-bottom:6px;">${itemsLista}</p>
+                                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid #eee;padding-top:8px;">
+                                    <span>${o.shipping || '-'}</span>
+                                    <span>$${Math.round(o.total).toLocaleString('es-AR')}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                } catch {
+                    container.innerHTML = '<div class="profile-pedidos-empty"><span>⚠️</span><p>Error al cargar los pedidos.</p></div>';
+                }
+            }
+
+            // ─── ELIMINAR CUENTA ───
+            document.getElementById('btnEliminarCuenta').addEventListener('click', () => {
+                const overlay = document.createElement('div');
+                overlay.className = 'guia-overlay';
+                overlay.id = 'deleteOverlay';
+                let step = 'confirm';
+
+                function renderConfirm() {
+                    step = 'confirm';
+                    overlay.innerHTML = `
+                        <div class="guia-backdrop"></div>
+                        <div class="guia-modal" style="max-width:420px;text-align:center;">
+                            <span class="guia-cerrar">&times;</span>
+                            <span style="font-size:48px;display:block;margin-bottom:12px;">⚠️</span>
+                            <h3 style="margin-bottom:8px;">¿Eliminar cuenta?</h3>
+                            <p style="font-size:14px;color:#666;margin-bottom:20px;">Te enviaremos un código a tu email para confirmar la eliminación. Todos tus datos se borrarán permanentemente.</p>
+                            <button class="btn-auth" id="sendCodeBtn" style="background:#e74c3c;margin-bottom:8px;">SÍ, ENVIAR CÓDIGO</button>
+                            <br>
+                            <a href="#" id="cancelDeleteBtn" style="font-size:13px;color:#999;text-decoration:underline;">Cancelar</a>
+                        </div>
+                    `;
+                    overlay.querySelector('.guia-backdrop').addEventListener('click', cerrarDelete);
+                    overlay.querySelector('.guia-cerrar').addEventListener('click', cerrarDelete);
+                    overlay.querySelector('#cancelDeleteBtn').addEventListener('click', (e) => { e.preventDefault(); cerrarDelete(); });
+
+                    overlay.querySelector('#sendCodeBtn').addEventListener('click', async () => {
+                        const btn = overlay.querySelector('#sendCodeBtn');
+                        btn.disabled = true;
+                        btn.textContent = 'ENVIANDO...';
+                        try {
+                            const token = localStorage.getItem('token');
+                            const res = await fetch('/api/solicitar-eliminacion', {
+                                method: 'POST',
+                                headers: { 'Authorization': 'Bearer ' + token },
+                            });
+                            const data = await res.json();
+                            if (data.exito) {
+                                renderCodeInput();
+                            } else {
+                                alert(data.error || 'Error al enviar el código.');
+                                btn.disabled = false;
+                                btn.textContent = 'SÍ, ENVIAR CÓDIGO';
+                            }
+                        } catch {
+                            alert('Error de conexión con el servidor.');
+                            btn.disabled = false;
+                            btn.textContent = 'SÍ, ENVIAR CÓDIGO';
+                        }
+                    });
+                }
+
+                function renderCodeInput() {
+                    step = 'code';
+                    overlay.innerHTML = `
+                        <div class="guia-backdrop"></div>
+                        <div class="guia-modal" style="max-width:440px;text-align:center;">
+                            <span class="guia-cerrar">&times;</span>
+                            <span style="font-size:40px;display:block;margin-bottom:8px;">📧</span>
+                            <h3 style="margin-bottom:4px;">Código de verificación</h3>
+                            <p style="font-size:13px;color:#666;margin-bottom:20px;">Te enviamos un código a tu email para confirmar la eliminación.</p>
+                            <div class="code-inputs delete-code-inputs">
+                                <input type="text" maxlength="1" class="code-input delete-code" inputmode="text" autocomplete="off">
+                                <input type="text" maxlength="1" class="code-input delete-code" inputmode="text" autocomplete="off">
+                                <input type="text" maxlength="1" class="code-input delete-code" inputmode="text" autocomplete="off">
+                                <input type="text" maxlength="1" class="code-input delete-code" inputmode="text" autocomplete="off">
+                                <input type="text" maxlength="1" class="code-input delete-code" inputmode="text" autocomplete="off">
+                                <input type="text" maxlength="1" class="code-input delete-code" inputmode="text" autocomplete="off">
+                            </div>
+                            <p class="verify-error" id="deleteVerifyError" style="color:#e74c3c;font-size:13px;margin:8px 0;"></p>
+                            <button class="btn-auth" id="verifyDeleteBtn" style="background:#e74c3c;">VERIFICAR Y ELIMINAR</button>
+                            <br>
+                            <a href="#" id="backDeleteBtn" style="font-size:13px;color:#999;text-decoration:underline;display:inline-block;margin-top:12px;">Volver</a>
+                        </div>
+                    `;
+                    overlay.querySelector('.guia-backdrop').addEventListener('click', cerrarDelete);
+                    overlay.querySelector('.guia-cerrar').addEventListener('click', cerrarDelete);
+
+                    const delInputs = overlay.querySelectorAll('.delete-code');
+                    const delError = overlay.querySelector('#deleteVerifyError');
+
+                    delInputs.forEach((input, index) => {
+                        input.addEventListener('input', () => {
+                            input.value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                            if (input.value && index < 5) delInputs[index + 1].focus();
+                            if (index === 5 && input.value) overlay.querySelector('#verifyDeleteBtn').click();
+                        });
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Backspace' && !input.value && index > 0) delInputs[index - 1].focus();
+                            if (e.key === 'Enter') overlay.querySelector('#verifyDeleteBtn').click();
+                        });
+                    });
+
+                    overlay.querySelector('#backDeleteBtn').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        renderConfirm();
+                    });
+
+                    overlay.querySelector('#verifyDeleteBtn').addEventListener('click', async () => {
+                        const codigo = Array.from(delInputs).map(inp => inp.value).join('');
+                        if (codigo.length < 6) {
+                            delError.textContent = 'Ingresá el código completo.';
+                            return;
+                        }
+                        delError.textContent = '';
+                        const btn = overlay.querySelector('#verifyDeleteBtn');
+                        btn.disabled = true;
+                        btn.textContent = 'ELIMINANDO...';
+                        try {
+                            const token = localStorage.getItem('token');
+                            const res = await fetch('/api/verificar-eliminacion', {
+                                method: 'POST',
+                                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ codigo }),
+                            });
+                            const data = await res.json();
+                            if (data.exito) {
+                                overlay.remove();
+                                mostrarGoodbye(data.nombre);
+                            } else {
+                                delError.textContent = data.error || 'Código incorrecto.';
+                                delInputs.forEach(inp => inp.value = '');
+                                delInputs[0].focus();
+                                btn.disabled = false;
+                                btn.textContent = 'VERIFICAR Y ELIMINAR';
+                            }
+                        } catch {
+                            delError.textContent = 'Error de conexión.';
+                            btn.disabled = false;
+                            btn.textContent = 'VERIFICAR Y ELIMINAR';
+                        }
+                    });
+                }
+
+                function cerrarDelete() {
+                    if (document.body.contains(overlay)) overlay.remove();
+                }
+
+                function mostrarGoodbye(nombre) {
+                    const goodbye = document.createElement('div');
+                    goodbye.className = 'welcome-overlay';
+                    goodbye.innerHTML = `
+                        <div class="welcome-content">
+                            <span style="font-size:72px;display:block;margin-bottom:16px;">😢</span>
+                            <h1>HASTA LUEGO,</h1>
+                            <h1>${nombre}!</h1>
+                            <p style="margin-top:20px;font-size:16px;color:#999;">Esperamos verte de nuevo 💔</p>
+                        </div>
+                    `;
+                    goodbye.classList.add('active');
+                    document.body.appendChild(goodbye);
+
+                    localStorage.removeItem('usuario');
+                    localStorage.removeItem('token');
+
+                    setTimeout(() => {
+                        goodbye.classList.add('fade-out');
+                        setTimeout(() => {
+                            goodbye.remove();
+                            actualizarUI();
+                        }, 600);
+                    }, 3000);
+                }
+
+                renderConfirm();
+                document.body.appendChild(overlay);
+                overlay.classList.add('active');
+            });
+
+            actualizarUI();
+        });
+    </script>
+</body>
+</html>

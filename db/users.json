@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1781191923132",
+    "nombre": "juanto to",
+    "email": "matugutierrezgc@gmail.com",
+    "dni": "45738787",
+    "password": "$2a$10$4F7PONOXBtdgvSPKYuRKh.hKUX9JGSWb8d/geL3nfgKOtR5NeHlNa",
+    "fecha": "2026-06-11T15:32:03.132Z"
+  },
+  {
+    "id": "1781193068142",
+    "nombre": "matu",
+    "email": "mmatucai7@gmail.com",
+    "dni": "456738786",
+    "password": "$2a$10$TQXY6BifMstxDHT1f.3VyeOyZei2zD7MK.dkokiRsUBiwFpFLO5mG",
+    "fecha": "2026-06-11T15:51:08.142Z"
+  },
+  {
+    "id": "1781193471209",
+    "nombre": "juan",
+    "email": "mmatuccai7@gmail.com",
+    "dni": "456738787",
+    "password": "$2a$10$UTRm7efpHktM5WJvH7w9rugig3N9aeoTGTOqEVSOfBSFenNi1mH5.",
+    "verified": true,
+    "fecha": "2026-06-11T15:57:51.209Z"
+  },
+  {
+    "id": "1781195602849",
+    "nombre": "Matias",
+    "email": "matugutierrez444@gmail.com",
+    "dni": "45738786",
+    "password": "$2a$10$6xA07pIidkXwYoWb5wsGXOv7Z0daqum/NEdrcrsIKhdvXmb.jzkvi",
+    "verified": true,
+    "fecha": "2026-06-11T16:33:22.849Z",
+    "datosEnvio": {
+      "telefono": "1112345678",
+      "direccion": "juan hernandez 1529",
+      "ciudad": "monte grande",
+      "provincia": "Buenos Aires",
+      "cp": "1842",
+      "piso": ""
+    }
+  },
+  {
+    "id": "1781226977173",
+    "nombre": "una culona",
+    "email": "banimartina05@gmail.com",
+    "dni": "44444444",
+    "password": "$2a$10$UwaRZXA0/6R72KzAI3jpZ.zS4ZDB0WbCpYSQ9PCC.MbilLo.vQ/sC",
+    "verified": false,
+    "codigo": "63FCX4",
+    "expiracion": 1781227577103,
+    "fecha": "2026-06-12T01:16:17.173Z",
+    "datosEnvio": {}
+  }
+]

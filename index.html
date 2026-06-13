@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Style</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <span>ENVÍOS A TODO EL PAÍS</span>
+        <span>CAMBIOS SIN CARGO</span>
+        <span>HASTA 6 CUOTAS</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: black;">URBAN</a>
+        </div>
+        <nav>
+            <a href="index.html" class="active">Inicio</a>
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="soporte.html">Soporte</a>
+        </nav>
+        <div class="icons">
+            <a href="#" id="btnBuscar">Buscar</a>
+            <a href="login.html">Mi cuenta</a>
+            <a href="carrito.html">🛒</a>
+        </div>
+        <div class="search-menu">
+            <span class="close-search">✕</span>
+            <input type="text" placeholder="¿Qué estás buscando?" class="search-input">
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="accesorios.html">Accesorios</a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-text">
+            <p class="hero-label">NUEVA TEMPORADA</p>
+            <h1>URBAN</h1>
+            <p class="hero-sub">COLLECTION</p>
+            <p class="hero-desc">Descubrí las últimas tendencias en ropa urbana. Estilo y comodidad para tu día a día.</p>
+            <button onclick="window.location.href='remeras.html'">COMPRAR AHORA</button>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200" alt="">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-accent">NUEVA COLECCIÓN</div>
+        <div class="hero-scroll">SCROLL</div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="home-marquee">
+        <div class="home-marquee-inner">
+            <span>ENVÍOS A TODO EL PAÍS ◆ CAMBIOS SIN CARGO ◆ 6 CUOTAS SIN INTERÉS ◆ ENVÍOS A TODO EL PAÍS ◆ CAMBIOS SIN CARGO ◆ 6 CUOTAS SIN INTERÉS ◆</span>
+            <span>ENVÍOS A TODO EL PAÍS ◆ CAMBIOS SIN CARGO ◆ 6 CUOTAS SIN INTERÉS ◆ ENVÍOS A TODO EL PAÍS ◆ CAMBIOS SIN CARGO ◆ 6 CUOTAS SIN INTERÉS ◆</span>
+        </div>
+    </div>
+
+    <!-- CATEGORÍAS -->
+    <section class="home-categorias" id="homeCategorias">
+        <div class="home-categoria" onclick="window.location.href='remeras.html'">
+            <span class="cat-number">01</span>
+            <h3>REMERAS</h3>
+            <p>Ver colección →</p>
+        </div>
+        <div class="home-categoria" onclick="window.location.href='buzos.html'">
+            <span class="cat-number">02</span>
+            <h3>BUZOS</h3>
+            <p>Ver colección →</p>
+        </div>
+        <div class="home-categoria" onclick="window.location.href='pantalones.html'">
+            <span class="cat-number">03</span>
+            <h3>PANTALONES</h3>
+            <p>Ver colección →</p>
+        </div>
+    </section>
+
+    <!-- PRODUCTOS DESTACADOS -->
+    <section class="productos" id="homeProductos">
+        <span class="home-section-title">PRODUCTOS DESTACADOS</span>
+        <div class="grid-productos" id="gridDestacados"></div>
+    </section>
+
+    <!-- BENEFICIOS -->
+    <section class="beneficios">
+        <div class="beneficio-item">
+            <span class="beneficio-icono">🚚</span>
+            <div>
+                <h4>Envíos a todo el país</h4>
+                <p>Entregas en 3 a 7 días hábiles</p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <span class="beneficio-icono">🔄</span>
+            <div>
+                <h4>Cambios sin cargo</h4>
+                <p>Hasta 30 días después de la compra</p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <span class="beneficio-icono">💳</span>
+            <div>
+                <h4>6 cuotas sin interés</h4>
+                <p>Con todas las tarjetas bancarias</p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <span class="beneficio-icono">📞</span>
+            <div>
+                <h4>Soporte dedicado</h4>
+                <p>Respondemos en menos de 24 hs</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>URBAN</h3>
+                <p>Ropa urbana con estilo. Descubrí las últimas tendencias en moda streetwear.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Instagram">IG</a>
+                    <a href="#" aria-label="WhatsApp">WA</a>
+                    <a href="#" aria-label="TikTok">TT</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <a href="remeras.html">Remeras</a>
+                <a href="buzos.html">Buzos</a>
+                <a href="pantalones.html">Pantalones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ayuda</h4>
+                <a href="soporte.html">Preguntas frecuentes</a>
+                <a href="soporte.html">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Recibí las últimas novedades y ofertas exclusivas.</p>
+                <form class="footer-form" onsubmit="return false;">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Urban — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toastCart">
+        <span class="toast-icon">🛒</span>
+        <span class="toast-message">¡Producto agregado!</span>
+    </div>
+
+    <script src="js/productos.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('gridDestacados');
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+        const destacados = shuffle(productos).slice(0, 4);
+
+        destacados.forEach(prod => {
+            const div = document.createElement('div');
+            div.className = 'producto';
+
+            const precio = new Intl.NumberFormat('es-AR', {
+                style: 'currency', currency: 'ARS', minimumFractionDigits: 0
+            }).format(prod.precio).replace("ARS", "$");
+
+            div.innerHTML = `
+                <div class="producto-img-container">
+                    <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy">
+                    ${prod.stock <= 0 ? '<span class="stock-badge sin-stock">Sin stock</span>' : (prod.stock === 1 ? '<span class="stock-badge ultimas">Última</span>' : (prod.stock <= 5 ? '<span class="stock-badge ultimas">Últimas</span>' : ''))}
+                    <button class="btn-agregar" data-id="${prod.id}" ${prod.stock <= 0 ? 'disabled style="opacity:0.3;cursor:not-allowed;pointer-events:none;"' : ''}>${prod.stock <= 0 ? 'SIN STOCK' : 'AGREGAR AL CARRITO'}</button>
+                </div>
+                <h4>${prod.nombre}</h4>
+                <p>${precio}</p>
+            `;
+            grid.appendChild(div);
+        });
+
+        grid.querySelectorAll('.btn-agregar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = e.target.getAttribute('data-id');
+                const prod = productos.find(p => p.id === id);
+                if (!prod) return;
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                const idx = carrito.findIndex(i => i.id === id);
+                if (idx > -1) { carrito[idx].cantidad += 1; }
+                else { carrito.push({ ...prod, cantidad: 1 }); }
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                const t = document.getElementById('toastCart');
+                t.querySelector('.toast-message').textContent = `¡${prod.nombre} agregado!`;
+                t.classList.add('active');
+                setTimeout(() => t.classList.remove('active'), 3000);
+                if (typeof actualizarBadgeCarrito === 'function') actualizarBadgeCarrito();
+            });
+        });
+
+        grid.querySelectorAll('.producto').forEach((el, idx) => {
+            el.addEventListener('click', () => {
+                if (typeof abrirModalProducto === 'function') {
+                    abrirModalProducto(destacados[idx].id);
+                }
+            });
+        });
+
+        if (typeof actualizarBadgeCarrito === 'function') actualizarBadgeCarrito();
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.home-categorias, .reveal').forEach(el => {
+            observer.observe(el);
+        });
+    });
+    </script>
+</body>
+</html>

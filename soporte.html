@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte - Urban Style</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="top-bar">
+        <span>ENVÍOS A TODO EL PAÍS</span>
+        <span>CAMBIOS SIN CARGO</span>
+        <span>HASTA 6 CUOTAS</span>
+    </div>
+
+    <header>
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: black;">URBAN</a>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="soporte.html" class="active">Soporte</a>
+        </nav>
+        <div class="icons">
+            <a href="#" id="btnBuscar">Buscar</a>
+            <a href="login.html">Mi cuenta</a>
+            <a href="carrito.html">🛒</a>
+        </div>
+        <div class="search-menu">
+            <span class="close-search">✕</span>
+            <input type="text" placeholder="¿Qué estás buscando?" class="search-input">
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="accesorios.html">Accesorios</a>
+        </div>
+    </header>
+
+    <section class="categoria-header">
+        <h1>Soporte</h1>
+        <p>Estamos acá para ayudarte. Consultá nuestras preguntas frecuentes o escribinos.</p>
+    </section>
+
+    <section class="soporte-grid">
+        <div class="soporte-info">
+            <div class="soporte-card">
+                <span class="soporte-icono">📦</span>
+                <h3>Envíos</h3>
+                <p>Realizamos envíos a todo el país. El tiempo de entrega estimado es de 3 a 7 días hábiles. Los envíos son gratuitos en compras superiores a $50.000.</p>
+            </div>
+            <div class="soporte-card">
+                <span class="soporte-icono">🔄</span>
+                <h3>Cambios y Devoluciones</h3>
+                <p>Tenés hasta 30 días para realizar cambios sin cargo. El producto debe estar en su estado original. Iniciá tu cambio contactándonos por WhatsApp o email.</p>
+            </div>
+            <div class="soporte-card">
+                <span class="soporte-icono">💳</span>
+                <h3>Medios de Pago</h3>
+                <p>Aceptamos tarjetas de crédito y débito (Visa, Mastercard, Amex), transferencia bancaria y efectivo contraentrega. Hasta 6 cuotas sin interés.</p>
+            </div>
+            <div class="soporte-card">
+                <span class="soporte-icono">📏</span>
+                <h3>Guía de Talles</h3>
+                <p>Consultá nuestra guía de talles para encontrar el talle perfecto. Si necesitás ayuda, escribinos y te asesoramos personalmente.</p>
+            </div>
+        </div>
+
+        <div class="soporte-faq">
+            <h2>Preguntas Frecuentes</h2>
+            <div class="faq-item">
+                <button class="faq-pregunta">¿Cuánto tarda el envío? <span class="faq-toggle">+</span></button>
+                <div class="faq-respuesta">Los envíos demoran entre 3 y 7 días hábiles dependiendo de tu ubicación. Una vez despachado, te enviaremos el número de seguimiento.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-pregunta">¿Cómo puedo hacer un cambio? <span class="faq-toggle">+</span></button>
+                <div class="faq-respuesta">Contactanos por WhatsApp o email dentro de los 30 días de recibido el producto. Te gestionaremos el cambio sin costo adicional.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-pregunta">¿Cuáles son los medios de pago? <span class="faq-toggle">+</span></button>
+                <div class="faq-respuesta">Aceptamos tarjetas de crédito/débito, transferencia bancaria y efectivo contraentrega. Financiamos hasta 6 cuotas sin interés.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-pregunta">¿Hacen envíos a todo el país? <span class="faq-toggle">+</span></button>
+                <div class="faq-respuesta">Sí, realizamos envíos a toda la Argentina. El envío es gratuito para compras superiores a $50.000.</div>
+            </div>
+        </div>
+
+        <div class="soporte-contacto">
+            <h2>Contactanos</h2>
+            <form id="formContacto">
+                <div class="soporte-contacto-campos">
+                    <div class="campo">
+                        <label>Nombre</label>
+                        <input type="text" id="contactoNombre" required placeholder="Tu nombre">
+                    </div>
+                    <div class="campo">
+                        <label>Email</label>
+                        <input type="email" id="contactoEmail" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="campo">
+                        <label>Mensaje</label>
+                        <textarea id="contactoMensaje" required rows="5" placeholder="Escribí tu consulta..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth">ENVIAR MENSAJE</button>
+            </form>
+            <p class="contacto-exito" id="contactoExito">✓ Mensaje enviado con éxito. Te responderemos a la brevedad.</p>
+            <p class="contacto-error" id="contactoError"></p>
+            <div class="soporte-redes">
+                <p>También podés contactarnos por:</p>
+                <div class="redes-links">
+                    <span>📱 WhatsApp: +54 11 1234-5678</span>
+                    <span>📧 Email: soporte@urbanstyle.com</span>
+                    <span>📍 Instagram: @urbanstyle</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>URBAN</h3>
+                <p>Streetwear premium con estilo urbano. Descubrí la nueva forma de vestir.</p>
+                <div class="footer-social">
+                    <a href="#">IG</a>
+                    <a href="#">WA</a>
+                    <a href="#">TK</a>
+                    <a href="#">YT</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <a href="remeras.html">Remeras</a>
+                <a href="buzos.html">Buzos</a>
+                <a href="pantalones.html">Pantalones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ayuda</h4>
+                <a href="soporte.html">Preguntas frecuentes</a>
+                <a href="soporte.html">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Recibí las últimas novedades y ofertas exclusivas.</p>
+                <form class="footer-form" onsubmit="return false;">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Urban — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelectorAll('.faq-pregunta').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = btn.closest('.faq-item');
+                    const respuesta = item.querySelector('.faq-respuesta');
+                    const toggle = btn.querySelector('.faq-toggle');
+                    const isOpen = item.classList.contains('active');
+                    document.querySelectorAll('.faq-item').forEach(i => {
+                        i.classList.remove('active');
+                        i.querySelector('.faq-toggle').textContent = '+';
+                        i.querySelector('.faq-respuesta').style.maxHeight = '0';
+                    });
+                    if (!isOpen) {
+                        item.classList.add('active');
+                        toggle.textContent = '−';
+                        respuesta.style.maxHeight = respuesta.scrollHeight + 'px';
+                    }
+                });
+            });
+
+            document.getElementById('formContacto').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                const exito = document.getElementById('contactoExito');
+                const error = document.getElementById('contactoError');
+                const nombre = document.getElementById('contactoNombre').value.trim();
+                const email = document.getElementById('contactoEmail').value.trim();
+                const mensaje = document.getElementById('contactoMensaje').value.trim();
+
+                btn.disabled = true;
+                btn.textContent = 'ENVIANDO...';
+                exito.classList.remove('visible');
+                error.textContent = '';
+                error.classList.remove('visible');
+
+                try {
+                    const res = await fetch('/api/contacto', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, email, mensaje }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        exito.classList.add('visible');
+                        e.target.reset();
+                        setTimeout(() => exito.classList.remove('visible'), 6000);
+                    } else {
+                        error.textContent = data.error || 'Error al enviar el mensaje.';
+                        error.classList.add('visible');
+                    }
+                } catch {
+                    error.textContent = 'Error de conexión con el servidor.';
+                    error.classList.add('visible');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'ENVIAR MENSAJE';
+                }
+            });
+        });
+    </script>
+    <script src="js/chat.js"></script>
+</body>
+</html>

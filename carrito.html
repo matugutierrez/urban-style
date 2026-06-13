@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - Urban Style</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="top-bar">
+        <span>ENVÍOS A TODO EL PAÍS</span>
+        <span>CAMBIOS SIN CARGO</span>
+        <span>HASTA 6 CUOTAS</span>
+    </div>
+
+    <header>
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: black;">URBAN</a>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="soporte.html">Soporte</a>
+        </nav>
+        <div class="icons">
+            <a href="#" id="btnBuscar">Buscar</a>
+            <a href="login.html">Mi cuenta</a>
+            <a href="carrito.html">🛒</a>
+        </div>
+        <div class="search-menu">
+            <span class="close-search">✕</span>
+            <input type="text" placeholder="¿Qué estás buscando?" class="search-input">
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="accesorios.html">Accesorios</a>
+        </div>
+    </header>
+
+    <section class="categoria-header">
+        <h1>Carrito de Compras</h1>
+        <p>Revisá tus productos antes de finalizar la compra.</p>
+    </section>
+
+    <section class="carrito-contenido" id="carritoContenido">
+        <div class="carrito-vacio" id="carritoVacio">
+            <span class="carrito-vacio-icono">🛒</span>
+            <h2>Tu carrito está vacío</h2>
+            <p>Agregá productos desde nuestro catálogo para empezar a comprar.</p>
+            <a href="remeras.html" class="btn-ir-tienda">IR A LA TIENDA</a>
+        </div>
+
+        <div class="carrito-grid" id="carritoGrid" style="display: none;">
+            <div class="carrito-items" id="carritoItems">
+            </div>
+
+            <aside class="carrito-resumen" id="carritoResumen">
+                <h3>Resumen</h3>
+                <div class="resumen-fila">
+                    <span>Subtotal</span>
+                    <span id="resumenSubtotal">$0</span>
+                </div>
+                <div class="resumen-fila">
+                    <span>Envío</span>
+                    <span id="resumenEnvio">$0</span>
+                </div>
+                <div class="resumen-fila resumen-total">
+                    <span>Total</span>
+                    <span id="resumenTotal">$0</span>
+                </div>
+                <button class="btn-finalizar" id="btnFinalizar">FINALIZAR COMPRA</button>
+                <a href="remeras.html" class="btn-seguir-comprando">← Seguir comprando</a>
+            </aside>
+        </div>
+    </section>
+
+    <section class="carrito-checkout" id="carritoCheckout" style="display: none;">
+        <div class="checkout-form">
+
+            <!-- PASO 1: DATOS DE COMPRA -->
+            <div id="checkoutPaso1">
+                <h2>Detalles de compra</h2>
+                <form id="formCheckout">
+                    <div class="checkout-campos">
+                        <div class="campo">
+                            <label>Nombre completo</label>
+                            <input type="text" id="checkoutNombre" required placeholder="Juan Pérez">
+                        </div>
+                        <div class="campo">
+                            <label>Email</label>
+                            <input type="email" id="checkoutEmail" required placeholder="correo@ejemplo.com">
+                        </div>
+                        <div class="campo">
+                            <label>Teléfono</label>
+                            <input type="tel" id="checkoutTelefono" required placeholder="11 1234-5678">
+                        </div>
+                        <div class="campo">
+                            <label>Dirección</label>
+                            <input type="text" id="checkoutDireccion" required placeholder="Av. Corrientes 1234, CABA">
+                        </div>
+                        <div class="campo">
+                            <label>Método de envío</label>
+                            <select id="checkoutEnvio" required>
+                                <option value="">Seleccionar</option>
+                                <option value="andreani">Andreani</option>
+                                <option value="oca">OCA</option>
+                                <option value="correo-argentino">Correo Argentino</option>
+                                <option value="retiro">Retiro en local (Av. Corrientes 1234, CABA)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkout-resumen-bar" id="checkoutResumenBar" style="background:#f9f9f9;padding:16px;border-radius:6px;margin:20px 0;">
+                        <div style="display:flex;justify-content:space-between;font-size:14px;margin:4px 0;">
+                            <span>Subtotal (<span id="resumenItemsCount">0</span> productos)</span>
+                            <span id="resumenSubtotal2">$0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px;margin:4px 0;">
+                            <span>Envío</span>
+                            <span id="resumenEnvio2">$0</span>
+                        </div>
+                        <div id="resumenDescuentoRow" style="display:none;justify-content:space-between;font-size:14px;color:#e74c3c;margin:4px 0;">
+                            <span>Descuento 15% primera compra</span>
+                            <span id="resumenDescuentoValor">-$0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:20px;font-weight:900;border-top:2px solid #000;padding-top:12px;margin-top:8px;">
+                            <span>Total</span>
+                            <span id="resumenTotal2">$0</span>
+                        </div>
+                    </div>
+                    <div class="checkout-acciones">
+                        <button type="button" class="btn-volver-carrito" id="btnVolverCarrito">← Volver al carrito</button>
+                        <button type="submit" class="btn-confirmar" id="btnCrearOrden">COMPRAR</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- PASO 2: ELEGIR MÉTODO DE PAGO -->
+            <div id="checkoutPaso2" style="display:none;">
+                <h2>Elegí cómo pagar</h2>
+                <p style="color:#666;font-size:14px;margin-bottom:20px;" id="checkoutOrderInfo">Orden #---</p>
+
+                <div class="pago-opciones" style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+                    <div class="pago-opcion" data-metodo="transferencia" style="border:1px solid #eee;border-radius:8px;padding:20px;cursor:pointer;transition:all 0.3s;">
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <span style="font-size:28px;">🏦</span>
+                            <div style="flex:1;">
+                                <h4 style="font-size:15px;font-weight:700;">Transferencia bancaria</h4>
+                                <p style="font-size:13px;color:#777;">Alias o CVU — sin recargo</p>
+                            </div>
+                            <span class="pago-check" style="font-size:20px;color:#ccc;">○</span>
+                        </div>
+                        <div class="pago-detalle" id="pagoDetalleTransferencia" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #eee;">
+                            <div style="background:#f9f9f9;padding:16px;border-radius:6px;font-size:13px;line-height:1.8;">
+                                <p><strong>Alias:</strong> mati.cai.gut</p>
+                                <p><strong>CVU:</strong> 0000003100036571468347</p>
+                                <p><strong>Titular:</strong> Matias Emanuel Gutierrez</p>
+                                <p><strong>DNI:</strong> 45.738.786</p>
+                                <p><strong>Banco:</strong> Banco de la Nación Argentina</p>
+                                <p style="margin-top:8px;color:#e74c3c;"><strong>Monto exacto:</strong> <span id="pagoMontoTransferencia"></span></p>
+                            </div>
+                            <p style="font-size:12px;color:#888;margin-top:12px;">Después de transferir, adjuntá el comprobante y hacé clic en "ENVIAR COMPROBANTE". El dueño verificará el pago.</p>
+                            <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+                                <input type="text" id="transferReferencia" placeholder="Número de referencia (opcional)" style="padding:12px 14px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box; border-radius:6px;">
+                                <div style="position:relative;">
+                                    <input type="file" id="transferComprobante" accept="image/*,.pdf" style="padding:10px 14px;border:1px solid #ddd;font-size:13px;width:100%; box-sizing:border-box; border-radius:6px;">
+                                </div>
+                            </div>
+                            <button class="btn-confirmar" id="btnPagoTransferencia" style="margin-top:12px;width:100%;">ENVIAR COMPROBANTE</button>
+                            <div id="transferStatus" style="display:none;margin-top:12px;padding:14px;border-radius:6px;font-size:14px;text-align:center;"></div>
+                        </div>
+                    </div>
+
+                    <div class="pago-opcion" data-metodo="tarjeta" style="border:1px solid #eee;border-radius:8px;padding:20px;cursor:pointer;transition:all 0.3s;">
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <span style="font-size:28px;">💳</span>
+                            <div style="flex:1;">
+                                <h4 style="font-size:15px;font-weight:700;">Tarjeta de crédito / débito</h4>
+                                <p style="font-size:13px;color:#777;">Visa, Mastercard, Amex — hasta 6 cuotas</p>
+                            </div>
+                            <span class="pago-check" style="font-size:20px;color:#ccc;">○</span>
+                        </div>
+                        <div class="pago-detalle" id="pagoDetalleTarjeta" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #eee;">
+                            <form id="cardForm" style="display:flex;flex-direction:column;gap:12px;">
+                                <div class="campo">
+                                    <label>Número de tarjeta</label>
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box;">
+                                </div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                                    <div class="campo">
+                                        <label>Vencimiento</label>
+                                        <input type="text" id="cardExpirationDate" placeholder="MM/AA" maxlength="5" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box;">
+                                    </div>
+                                    <div class="campo">
+                                        <label>CVV</label>
+                                        <input type="text" id="cardCvv" placeholder="123" maxlength="4" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box;">
+                                    </div>
+                                </div>
+                                <div class="campo">
+                                    <label>Nombre del titular</label>
+                                    <input type="text" id="cardName" placeholder="Como figura en la tarjeta" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box;">
+                                </div>
+                                <div class="campo">
+                                    <label>Tipo de documento</label>
+                                    <select id="cardDocType" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box; background:white;">
+                                        <option value="DNI">DNI</option>
+                                        <option value="CI">CI</option>
+                                        <option value="LE">LE</option>
+                                        <option value="LC">LC</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="campo">
+                                    <label>Número de documento</label>
+                                    <input type="text" id="cardDocNumber" placeholder="45738786" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box;">
+                                </div>
+                                <div class="campo" id="cardInstallmentsWrapper" style="display:none;">
+                                    <label>Cuotas</label>
+                                    <select id="cardInstallments" style="padding:14px 16px;border:1px solid #ddd;font-size:14px;outline:none;width:100%; box-sizing:border-box; background:white;"></select>
+                                </div>
+                                <input type="hidden" id="cardToken" value="">
+                                <input type="hidden" id="cardPaymentMethodId" value="">
+                                <input type="hidden" id="cardIssuerId" value="">
+                            </form>
+                            <p style="font-size:12px;color:#888;margin-top:12px;">Pago procesado de forma segura por Mercado Pago.</p>
+                            <button class="btn-confirmar" id="btnPagoTarjeta" style="margin-top:12px;width:100%;">PAGAR <span id="pagoMontoTarjeta"></span></button>
+                        </div>
+                    </div>
+
+                    <div class="pago-opcion" data-metodo="mercadopago" style="border:1px solid #eee;border-radius:8px;padding:20px;cursor:pointer;transition:all 0.3s;">
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <span style="font-size:28px;">🧡</span>
+                            <div style="flex:1;">
+                                <h4 style="font-size:15px;font-weight:700;">Mercado Pago</h4>
+                                <p style="font-size:13px;color:#777;">Pagá con tu billetera virtual — rápido y seguro</p>
+                            </div>
+                            <span class="pago-check" style="font-size:20px;color:#ccc;">○</span>
+                        </div>
+                        <div class="pago-detalle" id="pagoDetalleMercadoPago" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #eee;">
+                            <div style="background:#f9f9f9;padding:20px;border-radius:6px;text-align:center;">
+                                <span style="font-size:48px;display:block;margin-bottom:12px;">🧡</span>
+                                <p style="font-size:14px;color:#555;margin-bottom:4px;">Escaneá el código QR con tu app de Mercado Pago</p>
+                                <p style="font-size:13px;color:#999;margin-bottom:16px;">o pagá desde tu cuenta de Mercado Pago</p>
+                                <div style="width:140px;height:140px;background:#f0f0f0;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:8px;">
+                                    <span style="font-size:80px;opacity:0.3;">⬛</span>
+                                </div>
+                                <p style="font-size:13px;font-weight:700;">Monto: <span id="pagoMontoMP"></span></p>
+                            </div>
+                            <p style="font-size:12px;color:#888;margin-top:12px;">Simulación — luego de pagar, hacé clic en "YA PAGUÉ".</p>
+                            <button class="btn-confirmar" id="btnPagoMP" style="margin-top:12px;width:100%;">YA PAGUÉ</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-volver-carrito" id="btnVolverEnvio">← Volver a datos de envío</button>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="carrito-exito" id="carritoExito" style="display: none;">
+        <div class="exito-contenido">
+            <span class="exito-icono">✅</span>
+            <h2 id="exitoTitle">¡Compra realizada con éxito!</h2>
+            <p id="exitoText">Te enviamos los detalles a tu correo electrónico.</p>
+            <p style="font-size:13px;color:#888;margin-bottom:20px;" id="exitoOrderRef"></p>
+            <a href="index.html" class="btn-ir-tienda">VOLVER AL INICIO</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>URBAN</h3>
+                <p>Streetwear premium con estilo urbano. Descubrí la nueva forma de vestir.</p>
+                <div class="footer-social">
+                    <a href="#">IG</a>
+                    <a href="#">WA</a>
+                    <a href="#">TK</a>
+                    <a href="#">YT</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <a href="remeras.html">Remeras</a>
+                <a href="buzos.html">Buzos</a>
+                <a href="pantalones.html">Pantalones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ayuda</h4>
+                <a href="soporte.html">Preguntas frecuentes</a>
+                <a href="soporte.html">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Recibí las últimas novedades y ofertas exclusivas.</p>
+                <form class="footer-form" onsubmit="return false;">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Urban — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <div class="toast" id="toastCart">
+        <span class="toast-icon">🛒</span>
+        <span class="toast-message"></span>
+    </div>
+
+    <script src="js/productos.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/carrito.js"></script>
+</body>
+</html>

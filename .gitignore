@@ -1,0 +1,12 @@
+# ─── Variables de entorno (contiene credenciales) ───
+.env
+
+# ─── Dependencias ───
+node_modules/
+
+# ─── Archivos subidos por usuarios ───
+receipts/
+
+# ─── Sistema ───
+.DS_Store
+Thumbs.db

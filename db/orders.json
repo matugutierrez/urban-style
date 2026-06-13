@@ -1,0 +1,349 @@
+[
+  {
+    "id": "URB-MQ9WZ70G-5O85",
+    "fecha": "2026-06-11T19:52:16.192Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "1159371225",
+      "direccion": "Juan Hernandez 1529"
+    },
+    "items": [
+      {
+        "id": "rem-2",
+        "nombre": "Remera Urban White",
+        "categoria": "remeras",
+        "subcategoria": "estampadas",
+        "precio": 29990,
+        "imagen": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600",
+        "descripcion": "Remera estampada con diseño urbano. Fresca y versátil para el día a día.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "imagenes": [],
+        "cantidad": 1
+      }
+    ],
+    "subtotal": 29990,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 29990,
+    "shipping": "Retiro en local",
+    "metodoPago": null,
+    "estado": "pendiente",
+    "pagoVerificado": false,
+    "userId": "1781195602849"
+  },
+  {
+    "id": "URB-MQ9XFMSW-1EJM",
+    "fecha": "2026-06-11T20:05:03.152Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "1159371225",
+      "direccion": "Juan Hernandez 1529"
+    },
+    "items": [
+      {
+        "id": "rem-2",
+        "nombre": "Remera Urban White",
+        "categoria": "remeras",
+        "subcategoria": "estampadas",
+        "precio": 29990,
+        "imagen": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600",
+        "descripcion": "Remera estampada con diseño urbano. Fresca y versátil para el día a día.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "imagenes": [],
+        "cantidad": 1
+      }
+    ],
+    "subtotal": 29990,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 29990,
+    "shipping": "Retiro en local",
+    "metodoPago": "transferencia",
+    "estado": "pagado",
+    "pagoVerificado": true,
+    "userId": "1781195602849",
+    "fechaPago": "2026-06-11T20:08:21.192Z"
+  },
+  {
+    "id": "URB-MQ9XKQET-Z1FQ",
+    "fecha": "2026-06-11T20:09:01.109Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "1159371225",
+      "direccion": "Juan Hernandez 1529"
+    },
+    "items": [
+      {
+        "id": "rem-4",
+        "nombre": "Remera Heavyweight Grey",
+        "categoria": "remeras",
+        "subcategoria": "oversize",
+        "precio": 38990,
+        "imagen": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600",
+        "descripcion": "Remera heavyweight con corte oversize. Tela gruesa y durable.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "imagenes": [],
+        "cantidad": 1
+      }
+    ],
+    "subtotal": 38990,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 38990,
+    "shipping": "Retiro en local",
+    "metodoPago": null,
+    "estado": "pendiente",
+    "pagoVerificado": false,
+    "userId": "1781195602849"
+  },
+  {
+    "id": "URB-MQ9XXAUG-801Q",
+    "fecha": "2026-06-11T20:18:47.465Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "1159371225",
+      "direccion": "Juan Hernandez 1529"
+    },
+    "items": [
+      {
+        "id": "rem-1",
+        "nombre": "Remera Oversize Negra",
+        "categoria": "remeras",
+        "subcategoria": "oversize",
+        "precio": 39990,
+        "imagen": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600",
+        "descripcion": "Remera oversize de algodón premium. Corte relajado, ideal para looks urbanos.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "imagenes": [],
+        "cantidad": 1
+      }
+    ],
+    "subtotal": 39990,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 39990,
+    "shipping": "Retiro en local",
+    "metodoPago": "transferencia",
+    "estado": "pagado",
+    "pagoVerificado": true,
+    "userId": "1781195602849",
+    "referenciaTransferencia": "",
+    "comprobantePath": "bf32fd7b4b8f9a53233141c7af6f1259",
+    "fechaPago": "2026-06-11T20:20:46.371Z"
+  },
+  {
+    "id": "URB-MQA243SI-JLSO",
+    "fecha": "2026-06-11T22:16:03.379Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "1112345678",
+      "direccion": "juan ashudasudhas 1231"
+    },
+    "items": [
+      {
+        "id": "rem-2",
+        "nombre": "Remera Urban White",
+        "categoria": "remeras",
+        "subcategoria": "estampadas",
+        "precio": 29990,
+        "imagen": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600",
+        "descripcion": "Remera estampada con diseño urbano. Fresca y versátil para el día a día.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "stock": 50,
+        "activo": true,
+        "cantidad": 1
+      }
+    ],
+    "subtotal": 29990,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 29990,
+    "shipping": "Retiro en local",
+    "metodoPago": null,
+    "estado": "pendiente",
+    "pagoVerificado": false,
+    "userId": "1781195602849"
+  },
+  {
+    "id": "URB-MQA3PRMW-4EL3",
+    "fecha": "2026-06-11T23:00:53.672Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias gutierrez",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "11 12345678",
+      "direccion": "sdfsdfsdfsdf 123123123"
+    },
+    "items": [
+      {
+        "id": "rem-1",
+        "nombre": "Remera Oversize Negra",
+        "categoria": "remeras",
+        "subcategoria": "oversize",
+        "precio": 39990,
+        "imagen": "/uploads/ee77e19ed2fa6ec74b1ce5f6022279bc",
+        "descripcion": "Remera oversize de algodón premium. Corte relajado, ideal para looks urbanos.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "stock": 2,
+        "activo": true,
+        "cantidad": 2,
+        "talle": "L"
+      },
+      {
+        "id": "buz-2",
+        "nombre": "Buzo Oversize Off-White",
+        "categoria": "buzos",
+        "subcategoria": "oversize",
+        "precio": 64990,
+        "imagen": "/uploads/b6167e2279481bc7900d279c10532ddf",
+        "descripcion": "Buzo oversize off-white. Corte amplio y tela premium.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "stock": 50,
+        "activo": true,
+        "cantidad": 1
+      }
+    ],
+    "subtotal": 144970,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 144970,
+    "shipping": "Retiro en local",
+    "metodoPago": null,
+    "estado": "pendiente",
+    "pagoVerificado": false,
+    "userId": "1781195602849"
+  },
+  {
+    "id": "URB-MQA8FCH0-CNAE",
+    "fecha": "2026-06-12T01:12:45.599Z",
+    "email": "matugutierrez444@gmail.com",
+    "cliente": {
+      "nombre": "Matias gut",
+      "email": "matugutierrez444@gmail.com",
+      "telefono": "1112345678",
+      "direccion": "Av. Corrientes 1234, CABA"
+    },
+    "items": [
+      {
+        "id": "rem-1",
+        "nombre": "Remera Oversize Negra",
+        "categoria": "remeras",
+        "subcategoria": "oversize",
+        "precio": 39990,
+        "imagen": "/uploads/ee77e19ed2fa6ec74b1ce5f6022279bc",
+        "descripcion": "Remera oversize de algodón premium. Corte relajado, ideal para looks urbanos.",
+        "talles": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL",
+          "XXXL"
+        ],
+        "cuotasSin": 3,
+        "cuotasCon": 6,
+        "stock": 60,
+        "activo": true,
+        "stockPorTalle": {
+          "M": 10,
+          "S": 10,
+          "XXXL": 10,
+          "L": 10,
+          "XL": 10,
+          "XXL": 10
+        },
+        "cantidad": 1,
+        "talle": "S"
+      }
+    ],
+    "subtotal": 39990,
+    "envio": 0,
+    "descuento": 0,
+    "descuentoMsg": "",
+    "total": 39990,
+    "shipping": "Retiro en local",
+    "metodoPago": null,
+    "estado": "pendiente",
+    "pagoVerificado": false,
+    "userId": "1781195602849"
+  }
+]

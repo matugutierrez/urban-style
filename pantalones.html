@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalones - Urban Style</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <span>ENVÍOS A TODO EL PAÍS</span>
+        <span>CAMBIOS SIN CARGO</span>
+        <span>HASTA 6 CUOTAS</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: black;">URBAN</a>
+        </div>
+
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html" class="active">Pantalones</a>
+            <a href="soporte.html">Soporte</a>
+        </nav>
+
+        <div class="icons">
+            <a href="#" id="btnBuscar">Buscar</a>
+            <a href="login.html">Mi cuenta</a>
+            <a href="carrito.html">🛒</a>
+        </div>
+
+        <!-- SEARCH MENU -->
+        <div class="search-menu">
+            <span class="close-search">✕</span>
+            <input type="text" placeholder="¿Qué estás buscando?" class="search-input">
+            <a href="remeras.html">Remeras</a>
+            <a href="buzos.html">Buzos</a>
+            <a href="pantalones.html">Pantalones</a>
+            <a href="accesorios.html">Accesorios</a>
+        </div>
+    </header>
+
+    <!-- CATEGORIA HEADER -->
+    <section class="categoria-header">
+        <h1>Pantalones</h1>
+        <p>Nuestra selección premium de pantalones cargo, jeans y joggers urbanos.</p>
+    </section>
+
+    <!-- FILTROS Y ORDENACIÓN -->
+    <section class="filtros-bar">
+        <div class="filtros-grupo">
+            <button class="filtro-btn active" data-sub="todas">Todas</button>
+            <button class="filtro-btn" data-sub="cargo">Cargo</button>
+            <button class="filtro-btn" data-sub="joggers">Joggers</button>
+            <button class="filtro-btn" data-sub="jeans">Jeans</button>
+        </div>
+        <div>
+            <select class="ordenar-select" id="ordenarSelect">
+                <option value="defecto">Ordenar por</option>
+                <option value="menor">Precio: Menor a Mayor</option>
+                <option value="mayor">Precio: Mayor a Menor</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section class="productos" style="padding-top: 0;">
+        <div class="grid-productos" id="gridPantalones">
+            <!-- Se cargan dinámicamente -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>URBAN</h3>
+                <p>Streetwear premium con estilo urbano. Descubrí la nueva forma de vestir.</p>
+                <div class="footer-social">
+                    <a href="#">IG</a>
+                    <a href="#">WA</a>
+                    <a href="#">TK</a>
+                    <a href="#">YT</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <a href="remeras.html">Remeras</a>
+                <a href="buzos.html">Buzos</a>
+                <a href="pantalones.html">Pantalones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ayuda</h4>
+                <a href="soporte.html">Preguntas frecuentes</a>
+                <a href="soporte.html">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Recibí las últimas novedades y ofertas exclusivas.</p>
+                <form class="footer-form" onsubmit="return false;">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Urban — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICACIÓN -->
+    <div class="toast" id="toastCart">
+        <span class="toast-icon">🛒</span>
+        <span class="toast-message">¡Producto agregado!</span>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/productos.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        // Filtrar productos de la categoría "pantalones"
+        const pantalones = productos.filter(p => p.categoria === 'pantalones');
+        let pantalonesFiltrados = [...pantalones];
+        let filtroActivo = 'todas';
+
+        const gridPantalones = document.getElementById('gridPantalones');
+        const ordenarSelect = document.getElementById('ordenarSelect');
+        const filtroBtns = document.querySelectorAll('.filtro-btn');
+
+        // Renderizar catálogo
+        function renderizarProductos(lista) {
+            gridPantalones.innerHTML = '';
+            
+            if (lista.length === 0) {
+                gridPantalones.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; font-weight: 500;">No se encontraron productos en esta categoría.</p>';
+                return;
+            }
+            
+            lista.forEach(prod => {
+                const div = document.createElement('div');
+                div.className = 'producto';
+                
+                // Formatear precio
+                const precioFormateado = new Intl.NumberFormat('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 0
+                }).format(prod.precio).replace("ARS", "$");
+                
+                div.innerHTML = `
+                    <div class="producto-img-container">
+                        <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy">
+                        ${prod.stock <= 0 ? '<span class="stock-badge sin-stock">Sin stock</span>' : (prod.stock === 1 ? '<span class="stock-badge ultimas">Última</span>' : (prod.stock <= 5 ? '<span class="stock-badge ultimas">Últimas</span>' : ''))}
+                        <button class="btn-agregar" data-id="${prod.id}" ${prod.stock <= 0 ? 'disabled style="opacity:0.3;cursor:not-allowed;pointer-events:none;"' : ''}>${prod.stock <= 0 ? 'SIN STOCK' : 'AGREGAR AL CARRITO'}</button>
+                    </div>
+                    <h4>${prod.nombre}</h4>
+                    <p>${precioFormateado}</p>
+                `;
+                gridPantalones.appendChild(div);
+            });
+            
+            // Asignar eventos de click en "Agregar al Carrito"
+            const botonesAgregar = gridPantalones.querySelectorAll('.btn-agregar');
+            botonesAgregar.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = e.target.getAttribute('data-id');
+                    if (typeof abrirModalProducto === 'function') {
+                        abrirModalProducto(id);
+                    }
+                });
+            });
+
+            // Click en producto abre modal detalle
+            gridPantalones.querySelectorAll('.producto').forEach((el, idx) => {
+                el.addEventListener('click', () => {
+                    if (typeof abrirModalProducto === 'function') {
+                        abrirModalProducto(lista[idx].id);
+                    }
+                });
+            });
+        }
+
+        // Mostrar cantidad actual del carrito en navbar
+        function actualizarBadgeCarrito() {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const totalCantidad = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            
+            const cartIconLink = document.querySelector('header .icons a[href="carrito.html"]');
+            if (cartIconLink) {
+                const badgeExistente = cartIconLink.querySelector('.cart-badge');
+                if (badgeExistente) {
+                    badgeExistente.remove();
+                }
+                
+                if (totalCantidad > 0) {
+                    cartIconLink.innerHTML = `🛒<span class="cart-badge">${totalCantidad}</span>`;
+                } else {
+                    cartIconLink.innerHTML = `🛒`;
+                }
+            }
+        }
+
+        // Filtros por subcategoría (Todas, Cargo, Joggers, Jeans)
+        filtroBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filtroBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                filtroActivo = e.target.getAttribute('data-sub');
+                aplicarFiltrosYOrden();
+            });
+        });
+
+        // Evento de ordenar
+        ordenarSelect.addEventListener('change', () => {
+            aplicarFiltrosYOrden();
+        });
+
+        // Aplicar filtros y ordenación combinados
+        function aplicarFiltrosYOrden() {
+            // 1. Filtro
+            if (filtroActivo === 'todas') {
+                pantalonesFiltrados = [...pantalones];
+            } else {
+                pantalonesFiltrados = pantalones.filter(p => p.subcategoria === filtroActivo);
+            }
+            
+            // 2. Orden
+            const orden = ordenarSelect.value;
+            if (orden === 'menor') {
+                pantalonesFiltrados.sort((a, b) => a.precio - b.precio);
+            } else if (orden === 'mayor') {
+                pantalonesFiltrados.sort((a, b) => b.precio - a.precio);
+            }
+            
+            renderizarProductos(pantalonesFiltrados);
+        }
+
+        // Carga inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarProductos(pantalones);
+            actualizarBadgeCarrito();
+        });
+    </script>
+</body>
+</html>
