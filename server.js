@@ -1,5 +1,4 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -7,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
+const { Resend } = require('resend');
 require('dotenv').config();
 
 const app = express();
@@ -33,20 +33,9 @@ app.use(express.json());
 app.use('/uploads', express.static(UPLOADS_PATH));
 app.use(express.static(path.join(__dirname)));
 
-// ─── TRANSPORTE DE GMAIL ───
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-    tls: { rejectUnauthorized: false },
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM_EMAIL = 'Urban Style <noreply@resend.dev>';
+const REPLY_TO = 'uurbannstylee@gmail.com';
 
 // ─── BASE DE DATOS (JSON) ───
 function leerUsuarios() {
@@ -95,33 +84,16 @@ app.post('/api/contacto', async (req, res) => {
             return res.status(400).json({ error: 'Completá todos los campos.' });
         }
 
-        // Notificar al dueño del sitio
-        await transporter.sendMail({
-            from: `"Urban Style Contacto" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
+        await resend.emails.send({
+            from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, reply_to: REPLY_TO,
             subject: `Nueva consulta de ${nombre}`,
-            html: `
-                <h2>Nueva consulta desde la web</h2>
-                <p><strong>Nombre:</strong> ${nombre}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Mensaje:</strong></p>
-                <p>${mensaje}</p>
-            `,
+            html: `<h2>Nueva consulta desde la web</h2><p><strong>Nombre:</strong> ${nombre}</p><p><strong>Email:</strong> ${email}</p><p><strong>Mensaje:</strong></p><p>${mensaje}</p>`,
         });
 
-        // Email de confirmación para el cliente
-        await transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: email,
+        await resend.emails.send({
+            from: FROM_EMAIL, to: email, reply_to: REPLY_TO,
             subject: 'Recibimos tu consulta - Urban Style',
-            html: `
-                <h2>¡Gracias por contactarte, ${nombre}!</h2>
-                <p>Recibimos tu consulta y nos pondremos en contacto a la brevedad.</p>
-                <p><strong>Tu mensaje:</strong></p>
-                <p>${mensaje}</p>
-                <br>
-                <p>Saludos,<br>Equipo Urban Style</p>
-            `,
+            html: `<h2>¡Gracias por contactarte, ${nombre}!</h2><p>Recibimos tu consulta y nos pondremos en contacto a la brevedad.</p><p><strong>Tu mensaje:</strong></p><p>${mensaje}</p><br><p>Saludos,<br>Equipo Urban Style</p>`,
         });
 
         res.json({ exito: true, mensaje: 'Mensaje enviado con éxito.' });
@@ -179,23 +151,10 @@ app.post('/api/register', async (req, res) => {
         usuarios.push(nuevoUsuario);
         guardarUsuarios(usuarios);
 
-        // Enviar email con código de verificación
-        transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: email,
+        resend.emails.send({
+            from: FROM_EMAIL, to: email, reply_to: REPLY_TO,
             subject: 'Tu código de verificación - Urban Style',
-            html: `
-                <div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-                    <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div>
-                    <h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Verificá tu email</h2>
-                    <p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para activar tu cuenta</p>
-                    <div style="background:#000;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${codigo}</div>
-                    <p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p>
-                    <p style="text-align:center;color:#999;font-size:12px;">Si no creaste esta cuenta, ignorá este email.</p>
-                    <br>
-                    <p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p>
-                </div>
-            `,
+            html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div><h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Verificá tu email</h2><p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para activar tu cuenta</p><div style="background:#000;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${codigo}</div><p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p><p style="text-align:center;color:#999;font-size:12px;">Si no creaste esta cuenta, ignorá este email.</p><br><p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p></div>`,
         }).catch(err => console.error('Error al enviar email de verificación:', err));
 
         res.json({
@@ -242,18 +201,10 @@ app.post('/api/verificar-codigo', async (req, res) => {
         delete usuario.expiracion;
         guardarUsuarios(usuarios);
 
-        // Email de bienvenida (no bloquea)
-        transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: email,
+        resend.emails.send({
+            from: FROM_EMAIL, to: email, reply_to: REPLY_TO,
             subject: '¡Bienvenido a Urban Style!',
-            html: `
-                <h2>¡Bienvenido a Urban Style, ${usuario.nombre}!</h2>
-                <p>Tu cuenta ha sido verificada y creada exitosamente.</p>
-                <p>Ya podés iniciar sesión y comenzar a comprar.</p>
-                <br>
-                <p>Saludos,<br>Equipo Urban Style</p>
-            `,
+            html: `<h2>¡Bienvenido a Urban Style, ${usuario.nombre}!</h2><p>Tu cuenta ha sido verificada y creada exitosamente.</p><p>Ya podés iniciar sesión y comenzar a comprar.</p><br><p>Saludos,<br>Equipo Urban Style</p>`,
         }).catch(err => console.error('Error al enviar email de bienvenida:', err));
 
         const token = jwt.sign(
@@ -298,21 +249,10 @@ app.post('/api/reenviar-codigo', async (req, res) => {
         usuario.expiracion = Date.now() + 10 * 60 * 1000;
         guardarUsuarios(usuarios);
 
-        transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: email,
+        resend.emails.send({
+            from: FROM_EMAIL, to: email, reply_to: REPLY_TO,
             subject: 'Nuevo código de verificación - Urban Style',
-            html: `
-                <div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-                    <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div>
-                    <h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Nuevo código de verificación</h2>
-                    <p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para activar tu cuenta</p>
-                    <div style="background:#000;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${nuevoCodigo}</div>
-                    <p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p>
-                    <br>
-                    <p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p>
-                </div>
-            `,
+            html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div><h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Nuevo código de verificación</h2><p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para activar tu cuenta</p><div style="background:#000;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${nuevoCodigo}</div><p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p><br><p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p></div>`,
         }).catch(err => console.error('Error al reenviar código:', err));
 
         res.json({ exito: true, mensaje: 'Código reenviado.' });
@@ -438,24 +378,10 @@ app.post('/api/recuperar-email', async (req, res) => {
             a + '*'.repeat(Math.min(b.length, 4)) + (b.length > 4 ? b.slice(-2) : '')
         );
 
-        transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: usuario.email,
+        resend.emails.send({
+            from: FROM_EMAIL, to: usuario.email, reply_to: REPLY_TO,
             subject: modo === 'dni' ? 'Recuperación de email - Urban Style' : 'Recuperación de contraseña - Urban Style',
-            html: `
-                <div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-                    <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div>
-                    <h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Recuperación de ${modo === 'dni' ? 'email' : 'contraseña'}</h2>
-                    <p style="text-align:center;color:#666;font-size:14px;margin-bottom:8px;">Recibimos una solicitud de recuperación para tu cuenta asociada a:</p>
-                    <p style="text-align:center;font-size:18px;font-weight:700;margin-bottom:20px;">${usuario.email}</p>
-                    <p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para continuar:</p>
-                    <div style="background:#000;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${codigo}</div>
-                    <p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p>
-                    <p style="text-align:center;color:#999;font-size:12px;">Si no solicitaste esto, ignorá este email.</p>
-                    <br>
-                    <p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p>
-                </div>
-            `,
+            html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div><h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Recuperación de ${modo === 'dni' ? 'email' : 'contraseña'}</h2><p style="text-align:center;color:#666;font-size:14px;margin-bottom:8px;">Recibimos una solicitud de recuperación para tu cuenta asociada a:</p><p style="text-align:center;font-size:18px;font-weight:700;margin-bottom:20px;">${usuario.email}</p><p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para continuar:</p><div style="background:#000;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${codigo}</div><p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p><p style="text-align:center;color:#999;font-size:12px;">Si no solicitaste esto, ignorá este email.</p><br><p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p></div>`,
         }).catch(err => console.error('Error al enviar código de recuperación:', err));
 
         res.json({
@@ -544,33 +470,16 @@ app.post('/api/contactar-dni', async (req, res) => {
 
         const textoUsuario = mensaje || 'El usuario no recuerda su DNI asociado a la cuenta.';
 
-        await transporter.sendMail({
-            from: `"Urban Style Web" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
+        await resend.emails.send({
+            from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, reply_to: REPLY_TO,
             subject: 'Alguien no recuerda su DNI - Urban Style',
-            html: `
-                <h2>Problema de recuperación de cuenta</h2>
-                <p>Un usuario no recuerda su DNI asociado a la cuenta.</p>
-                <p><strong>Email de contacto del usuario:</strong> ${emailAlternativo}</p>
-                <p><strong>Mensaje:</strong> ${textoUsuario}</p>
-                <p>Por favor contactarlo para ayudarlo a recuperar su cuenta.</p>
-            `,
+            html: `<h2>Problema de recuperación de cuenta</h2><p>Un usuario no recuerda su DNI asociado a la cuenta.</p><p><strong>Email de contacto del usuario:</strong> ${emailAlternativo}</p><p><strong>Mensaje:</strong> ${textoUsuario}</p><p>Por favor contactarlo para ayudarlo a recuperar su cuenta.</p>`,
         });
 
-        await transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: emailAlternativo,
+        await resend.emails.send({
+            from: FROM_EMAIL, to: emailAlternativo, reply_to: REPLY_TO,
             subject: 'Recibimos tu consulta - Urban Style',
-            html: `
-                <div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-                    <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div>
-                    <h2 style="text-align:center;font-size:20px;margin-bottom:12px;font-weight:700;">Recibimos tu consulta</h2>
-                    <p style="text-align:center;color:#666;font-size:14px;line-height:1.6;">Nos vamos a poner en contacto con vos a la brevedad para ayudarte a recuperar tu cuenta.</p>
-                    <p style="text-align:center;color:#666;font-size:14px;line-height:1.6;">Guardamos tu email <strong>${emailAlternativo}</strong> para contactarte.</p>
-                    <br>
-                    <p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p>
-                </div>
-            `,
+            html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div><h2 style="text-align:center;font-size:20px;margin-bottom:12px;font-weight:700;">Recibimos tu consulta</h2><p style="text-align:center;color:#666;font-size:14px;line-height:1.6;">Nos vamos a poner en contacto con vos a la brevedad para ayudarte a recuperar tu cuenta.</p><p style="text-align:center;color:#666;font-size:14px;line-height:1.6;">Guardamos tu email <strong>${emailAlternativo}</strong> para contactarte.</p><br><p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p></div>`,
         });
 
         res.json({ exito: true, mensaje: 'Te contactaremos a la brevedad.' });
@@ -595,22 +504,10 @@ app.post('/api/solicitar-eliminacion', autenticar, async (req, res) => {
         usuario.expiracionEliminacion = Date.now() + 10 * 60 * 1000;
         guardarUsuarios(usuarios);
 
-        transporter.sendMail({
-            from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-            to: usuario.email,
+        resend.emails.send({
+            from: FROM_EMAIL, to: usuario.email, reply_to: REPLY_TO,
             subject: 'Código para eliminar tu cuenta - Urban Style',
-            html: `
-                <div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-                    <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div>
-                    <h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Eliminación de cuenta</h2>
-                    <p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para confirmar la eliminación de tu cuenta</p>
-                    <div style="background:#c0392b;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${codigo}</div>
-                    <p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p>
-                    <p style="text-align:center;color:#999;font-size:12px;">Si no solicitaste esta acción, ignorá este email.</p>
-                    <br>
-                    <p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p>
-                </div>
-            `,
+            html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div><h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Eliminación de cuenta</h2><p style="text-align:center;color:#666;font-size:14px;margin-bottom:25px;">Usá este código para confirmar la eliminación de tu cuenta</p><div style="background:#c0392b;color:#fff;font-size:36px;font-weight:900;letter-spacing:12px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${codigo}</div><p style="text-align:center;color:#999;font-size:12px;">Este código expira en 10 minutos.</p><p style="text-align:center;color:#999;font-size:12px;">Si no solicitaste esta acción, ignorá este email.</p><br><p style="text-align:center;color:#666;font-size:13px;">Saludos,<br><strong>Equipo Urban Style</strong></p></div>`,
         }).catch(err => console.error('Error al enviar código de eliminación:', err));
 
         res.json({ exito: true, mensaje: 'Código enviado a tu email.' });
@@ -675,19 +572,10 @@ function generarIdOrden() {
     return 'URB-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 }
 
-// Enviar email con template de Urban
 function enviarEmailHTML(to, subject, html) {
-    return transporter.sendMail({
-        from: `"Urban Style" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
-        html: `
-        <div style="font-family:'Montserrat',Arial,sans-serif;max-width:560px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-            <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:6px;margin-bottom:25px;color:#000;">URBAN</div>
-            ${html}
-            <br>
-            <p style="text-align:center;color:#999;font-size:12px;border-top:1px solid #eee;padding-top:16px;">© 2026 Urban Style — Todos los derechos reservados</p>
-        </div>`,
+    return resend.emails.send({
+        from: FROM_EMAIL, to, reply_to: REPLY_TO, subject,
+        html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:560px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:6px;margin-bottom:25px;color:#000;">URBAN</div>${html}<br><p style="text-align:center;color:#999;font-size:12px;border-top:1px solid #eee;padding-top:16px;">© 2026 Urban Style — Todos los derechos reservados</p></div>`,
     });
 }
 
@@ -797,26 +685,11 @@ app.post('/api/orders', async (req, res) => {
             <p style="text-align:center;color:#666;font-size:13px;margin-top:20px;">Te vamos a enviar otro email cuando confirmemos el pago.</p>
         `);
 
-        // Notificar al dueño de la tienda
         const itemsResumen = items.map(i => `• ${i.nombre} x${i.cantidad} = $${(i.precio * i.cantidad).toLocaleString('es-AR')}`).join('<br>');
-        transporter.sendMail({
-            from: `"Urban Style Web" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
-            subject: `🛒 Nueva orden #${ordenId} - ${cliente.nombre}`,
-            html: `
-                <h2>Nueva orden recibida</h2>
-                <p><strong>Orden:</strong> #${ordenId}</p>
-                <p><strong>Cliente:</strong> ${cliente.nombre}</p>
-                <p><strong>Email:</strong> ${cliente.email}</p>
-                <p><strong>Teléfono:</strong> ${cliente.telefono || '-'}</p>
-                <p><strong>Dirección:</strong> ${dirEnvio}</p>
-                <p><strong>Envío:</strong> ${shipping}</p>
-                <p><strong>Total:</strong> $${Math.round(total - descuento).toLocaleString('es-AR')}</p>
-                <p><strong>Productos:</strong></p>
-                <p>${itemsResumen}</p>
-                ${descuento > 0 ? `<p><strong>Descuento aplicado:</strong> ${descuentoMsg} (-$${Math.round(descuento).toLocaleString('es-AR')})</p>` : ''}
-                <p style="color:#999;font-size:12px;margin-top:16px;">Esperando pago del cliente.</p>
-            `,
+        resend.emails.send({
+            from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, reply_to: REPLY_TO,
+            subject: `Nueva orden #${ordenId} - ${cliente.nombre}`,
+            html: `<h2>Nueva orden recibida</h2><p><strong>Orden:</strong> #${ordenId}</p><p><strong>Cliente:</strong> ${cliente.nombre}</p><p><strong>Email:</strong> ${cliente.email}</p><p><strong>Teléfono:</strong> ${cliente.telefono || '-'}</p><p><strong>Dirección:</strong> ${dirEnvio}</p><p><strong>Envío:</strong> ${shipping}</p><p><strong>Total:</strong> $${Math.round(total - descuento).toLocaleString('es-AR')}</p><p><strong>Productos:</strong></p><p>${itemsResumen}</p>${descuento > 0 ? `<p><strong>Descuento aplicado:</strong> ${descuentoMsg} (-$${Math.round(descuento).toLocaleString('es-AR')})</p>` : ''}<p style="color:#999;font-size:12px;margin-top:16px;">Esperando pago del cliente.</p>`,
         }).catch(err => console.error('Error al notificar al dueño:', err));
 
         res.json({
@@ -944,31 +817,15 @@ app.post('/api/orders/:id/submit-receipt', (req, res) => {
                 <p style="text-align:center;color:#666;font-size:14px;">Te vamos a confirmar por email cuando esté aprobado.</p>
             `);
 
-            // Email al dueño con el comprobante adjunto
             const attachments = archivo ? [{
                 filename: archivo.originalname,
                 path: archivo.path,
             }] : [];
 
-            await transporter.sendMail({
-                from: `"Urban Style Web" <${process.env.EMAIL_USER}>`,
-                to: process.env.EMAIL_USER,
-                subject: `💳 Comprobante recibido - Orden #${orden.id} - ${orden.cliente.nombre}`,
-                html: `
-                    <h2>Comprobante de transferencia recibido</h2>
-                    <p><strong>Orden:</strong> #${orden.id}</p>
-                    <p><strong>Cliente:</strong> ${orden.cliente.nombre}</p>
-                    <p><strong>Email:</strong> ${orden.cliente.email}</p>
-                    <p><strong>Teléfono:</strong> ${orden.cliente.telefono || '-'}</p>
-                    <p><strong>Referencia:</strong> ${referencia || '(sin referencia)'}</p>
-                    <p><strong>Total:</strong> $${Math.round(orden.total).toLocaleString('es-AR')}</p>
-                    <p><strong>Envío:</strong> ${orden.shipping}</p>
-                    ${archivo ? `<p><strong>Comprobante:</strong> adjunto en este email</p>` : '<p><strong>Comprobante:</strong> no se adjuntó archivo</p>'}
-                    <br>
-                    <p>Para confirmar el pago, hacé clic en el siguiente enlace:</p>
-                    <p><a href="${BASE_URL}/api/orders/${orden.id}/confirm-payment" style="display:inline-block;background:#27ae60;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:700;">✓ CONFIRMAR PAGO</a></p>
-                    <p style="color:#999;font-size:12px;margin-top:12px;">O usá el endpoint: POST /api/orders/${orden.id}/confirm-payment</p>
-                `,
+            await resend.emails.send({
+                from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, reply_to: REPLY_TO,
+                subject: `Comprobante recibido - Orden #${orden.id} - ${orden.cliente.nombre}`,
+                html: `<h2>Comprobante de transferencia recibido</h2><p><strong>Orden:</strong> #${orden.id}</p><p><strong>Cliente:</strong> ${orden.cliente.nombre}</p><p><strong>Email:</strong> ${orden.cliente.email}</p><p><strong>Teléfono:</strong> ${orden.cliente.telefono || '-'}</p><p><strong>Referencia:</strong> ${referencia || '(sin referencia)'}</p><p><strong>Total:</strong> $${Math.round(orden.total).toLocaleString('es-AR')}</p><p><strong>Envío:</strong> ${orden.shipping}</p>${archivo ? `<p><strong>Comprobante:</strong> adjunto en este email</p>` : '<p><strong>Comprobante:</strong> no se adjuntó archivo</p>'}<br><p>Para confirmar el pago, hacé clic en el siguiente enlace:</p><p><a href="${BASE_URL}/api/orders/${orden.id}/confirm-payment" style="display:inline-block;background:#27ae60;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:700;">✓ CONFIRMAR PAGO</a></p><p style="color:#999;font-size:12px;margin-top:12px;">O usá el endpoint: POST /api/orders/${orden.id}/confirm-payment</p>`,
                 attachments,
             });
 
@@ -1024,11 +881,10 @@ async function confirmarPago(req, res) {
             </div>
         `);
 
-        transporter.sendMail({
-            from: `"Urban Style Web" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
-            subject: `✅ Pago confirmado - Orden #${orden.id} - ${orden.cliente.nombre}`,
-            html: `<h2>Pago confirmado manualmente</h2><p><strong>Orden:</strong> #${orden.id}</p><p><strong>Cliente:</strong> ${orden.cliente.nombre}</p><p><strong>Método:</strong> ${metodoLabel}</p><p><strong>Total:</strong> $${Math.round(orden.total).toLocaleString('es-AR')}</p><p><strong>Envío:</strong> ${orden.shipping}</p><p style="color:#27ae60;font-weight:700;">✅ Pago verificado</p>`,
+        resend.emails.send({
+            from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, reply_to: REPLY_TO,
+            subject: `Pago confirmado - Orden #${orden.id} - ${orden.cliente.nombre}`,
+            html: `<h2>Pago confirmado manualmente</h2><p><strong>Orden:</strong> #${orden.id}</p><p><strong>Cliente:</strong> ${orden.cliente.nombre}</p><p><strong>Método:</strong> ${metodoLabel}</p><p><strong>Total:</strong> $${Math.round(orden.total).toLocaleString('es-AR')}</p><p><strong>Envío:</strong> ${orden.shipping}</p><p style="color:#27ae60;font-weight:700;">Pago verificado</p>`,
         }).catch(err => console.error('Error al notificar al dueño:', err));
 
         if (req.method === 'GET') {
@@ -1230,20 +1086,10 @@ app.post('/api/admin/send-code', authAdmin, (req, res) => {
     admin2FACode = code;
     admin2FAExpiry = Date.now() + 5 * 60 * 1000; // 5 minutos
 
-    transporter.sendMail({
-        from: `"Urban Style Admin" <${process.env.EMAIL_USER}>`,
-        to: ADMIN_EMAIL,
-        subject: '🔐 Código de verificación - Admin Urban Style',
-        html: `
-            <div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;">
-                <div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div>
-                <h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Código de verificación</h2>
-                <p style="text-align:center;color:#666;font-size:14px;margin-bottom:8px;">Ingresá este código en el panel admin:</p>
-                <div style="background:#000;color:#fff;font-size:42px;font-weight:900;letter-spacing:14px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${code}</div>
-                <p style="text-align:center;color:#999;font-size:12px;">Este código expira en 5 minutos.</p>
-                <p style="text-align:center;color:#999;font-size:12px;">Si no solicitaste este código, ignorá este email.</p>
-            </div>
-        `,
+    resend.emails.send({
+        from: FROM_EMAIL, to: ADMIN_EMAIL, reply_to: REPLY_TO,
+        subject: 'Código de verificación - Admin Urban Style',
+        html: `<div style="font-family:'Montserrat',Arial,sans-serif;max-width:520px;margin:0 auto;padding:30px;background:#fff;border:1px solid #eee;border-radius:8px;"><div style="text-align:center;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:25px;">URBAN</div><h2 style="text-align:center;font-size:22px;margin-bottom:8px;font-weight:700;">Código de verificación</h2><p style="text-align:center;color:#666;font-size:14px;margin-bottom:8px;">Ingresá este código en el panel admin:</p><div style="background:#000;color:#fff;font-size:42px;font-weight:900;letter-spacing:14px;text-align:center;padding:20px;border-radius:6px;margin:0 auto 25px;max-width:300px;font-family:monospace;">${code}</div><p style="text-align:center;color:#999;font-size:12px;">Este código expira en 5 minutos.</p><p style="text-align:center;color:#999;font-size:12px;">Si no solicitaste este código, ignorá este email.</p></div>`,
     }).catch(err => console.error('Error al enviar código 2FA:', err));
 
     res.json({ exito: true, mensaje: 'Código enviado al email del administrador.' });
@@ -1399,5 +1245,5 @@ function descontarStock(items) {
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`📧 Emails desde: ${process.env.EMAIL_USER}`);
+    console.log(`📧 Emails desde: ${process.env.ADMIN_EMAIL}`);
 });
