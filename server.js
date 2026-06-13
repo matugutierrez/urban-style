@@ -34,7 +34,7 @@ app.use('/uploads', express.static(UPLOADS_PATH));
 app.use(express.static(path.join(__dirname)));
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const FROM_EMAIL = 'Urban Style <uurbannstylee@gmail.com>';
+const FROM_EMAIL = { email: 'uurbannstylee@gmail.com', name: 'Urban Style' };
 const REPLY_TO = 'uurbannstylee@gmail.com';
 
 // ─── BASE DE DATOS (JSON) ───
@@ -1244,6 +1244,6 @@ function descontarStock(items) {
 }
 
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor corriendo en ${BASE_URL}`);
     console.log(`📧 Emails desde: ${process.env.ADMIN_EMAIL}`);
 });
