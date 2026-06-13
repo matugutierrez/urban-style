@@ -430,4 +430,74 @@ if (searchInput) {
         }
     });
 }
+
+// ─── MOBILE HAMBURGER MENU ───
+document.addEventListener('DOMContentLoaded', () => {
+    const header = document.querySelector('header');
+    const nav = document.querySelector('nav');
+    if (!header || !nav) return;
+
+    // Create hamburger button
+    const hamburger = document.createElement('button');
+    hamburger.className = 'hamburger';
+    hamburger.setAttribute('aria-label', 'Menú');
+    hamburger.innerHTML = '<span></span><span></span><span></span>';
+
+    // Insert after logo
+    const logo = header.querySelector('.logo');
+    if (logo) {
+        logo.after(hamburger);
+    } else {
+        header.insertBefore(hamburger, nav);
+    }
+
+    // Create mobile menu overlay
+    const mobileMenu = document.createElement('div');
+    mobileMenu.className = 'mobile-menu';
+
+    // Collect all nav links and icon links (except cart)
+    const allLinks = [];
+    nav.querySelectorAll('a').forEach(a => {
+        allLinks.push({ href: a.getAttribute('href'), text: a.textContent });
+    });
+    const iconsLinks = header.querySelectorAll('.icons a');
+    if (iconsLinks.length) {
+        allLinks.push({ divider: true });
+        iconsLinks.forEach(a => {
+            const text = a.textContent.trim();
+            if (text === '🛒') {
+                allLinks.push({ href: a.getAttribute('href'), text: '🛒 Carrito' });
+            } else {
+                allLinks.push({ href: a.getAttribute('href'), text });
+            }
+        });
+    }
+
+    let menuHTML = '';
+    allLinks.forEach(item => {
+        if (item.divider) {
+            menuHTML += '<hr>';
+        } else {
+            menuHTML += `<a href="${item.href}">${item.text}</a>`;
+        }
+    });
+    mobileMenu.innerHTML = menuHTML;
+    document.body.appendChild(mobileMenu);
+
+    // Toggle
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close on link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+});
 
