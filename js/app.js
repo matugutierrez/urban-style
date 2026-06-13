@@ -374,12 +374,14 @@ btnBuscar.addEventListener("click", (e) => {
     e.preventDefault();
 
     searchMenu.classList.add("active");
+    document.querySelector('.hamburger')?.classList.add('hidden');
 
 });
 
 closeSearch.addEventListener("click", () => {
 
     searchMenu.classList.remove("active");
+    document.querySelector('.hamburger')?.classList.remove('hidden');
 
 });
 
