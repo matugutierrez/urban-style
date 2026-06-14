@@ -5,9 +5,16 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+html {
+    min-height: 100%;
+}
+
 body {
     background: white;
     color: black;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .top-bar {
@@ -45,6 +52,13 @@ nav a {
     font-weight: 500;
 }
 
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+}
+
 .icons a {
     margin-right: 0px;
     padding: 0 10px;
@@ -52,7 +66,8 @@ nav a {
     font-size: 22px;
     letter-spacing: 3px;
     font-size: 80%;
-    text-decoration: none
+    text-decoration: none;
+    white-space: nowrap;
 }
 
 /* Hamburguesa (oculta en desktop) */
@@ -482,6 +497,7 @@ nav a {
 footer {
     background: #111;
     color: white;
+    margin-top: auto;
 }
 
 .footer-inner {
@@ -862,10 +878,12 @@ nav a.active {
     font-weight: 700;
     padding: 2px 6px;
     border-radius: 50%;
-    margin-left: 4px;
-    vertical-align: middle;
+    margin-left: 2px;
+    position: relative;
+    top: -6px;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: inline-block;
+    line-height: 1.2;
 }
 
 .cart-badge.pulse {
@@ -937,7 +955,7 @@ nav a.active {
 .carrito-item {
     display: grid;
     grid-template-columns: 120px 1fr auto auto auto;
-    gap: 20px;
+    gap: 24px;
     align-items: center;
     padding: 20px;
     border: 1px solid #eee;
@@ -954,6 +972,10 @@ nav a.active {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.carrito-item-info {
+    padding-left: 12px;
 }
 
 .carrito-item-info h4 {
@@ -1636,6 +1658,7 @@ nav a.active {
     }
     .carrito-item {
         grid-template-columns: 100px 1fr auto;
+        gap: 16px;
     }
     .carrito-item-total {
         display: none;
@@ -2344,6 +2367,19 @@ nav a.active {
     border-top: 1px solid #eee;
     margin: 20px 0;
 }
+
+.profile-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.profile-password-form {
+    margin-bottom: 20px;
+}
 .profile-pedidos-empty {
     text-align: center;
     padding: 48px 20px;
@@ -2682,7 +2718,7 @@ nav a.active {
     }
     .carrito-item {
         grid-template-columns: 80px 1fr;
-        gap: 15px;
+        gap: 16px;
     }
     .carrito-item-total,
     .carrito-item-cantidad {

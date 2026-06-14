@@ -310,6 +310,35 @@
                 <div class="profile-panel" id="panelPedidos">
                     <div id="pedidosContainer"></div>
                 </div>
+                <div class="profile-divider"></div>
+                <div class="profile-section-title">Cambiar contraseña</div>
+                <div class="profile-password-form" id="profilePasswordForm">
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <label>Contraseña actual</label>
+                            <div class="input-password">
+                                <input type="password" id="pCurrentPassword" placeholder="••••••••" class="perfil-input">
+                                <button type="button" class="password-toggle eye-crossed" data-target="pCurrentPassword" aria-label="Mostrar contraseña">👁</button>
+                            </div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Nueva contraseña</label>
+                            <div class="input-password">
+                                <input type="password" id="pNewPassword" placeholder="Mínimo 6 caracteres" class="perfil-input">
+                                <button type="button" class="password-toggle eye-crossed" data-target="pNewPassword" aria-label="Mostrar contraseña">👁</button>
+                            </div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Confirmar nueva contraseña</label>
+                            <div class="input-password">
+                                <input type="password" id="pConfirmPassword" placeholder="Repetir contraseña" class="perfil-input">
+                                <button type="button" class="password-toggle eye-crossed" data-target="pConfirmPassword" aria-label="Mostrar contraseña">👁</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-guardar-perfil" id="btnCambiarPasswordPerfil">CAMBIAR CONTRASEÑA</button>
+                    <p class="auth-error" id="passwordChangeError"></p>
+                </div>
                 <button class="btn-auth btn-cerrar-sesion" id="btnCerrarSesion">CERRAR SESIÓN</button>
                 <button class="btn-eliminar-cuenta" id="btnEliminarCuenta">ELIMINAR CUENTA</button>
             </div>
@@ -474,6 +503,63 @@
                 btn.textContent = 'GUARDADO ✓';
                 btn.style.opacity = '0.6';
                 setTimeout(() => { btn.textContent = 'GUARDAR CAMBIOS'; btn.style.opacity = '1'; }, 2000);
+            });
+
+            // ─── CAMBIAR CONTRASEÑA DESDE EL PERFIL ───
+            document.getElementById('btnCambiarPasswordPerfil').addEventListener('click', async () => {
+                const errorEl = document.getElementById('passwordChangeError');
+                errorEl.textContent = '';
+
+                const currentPassword = document.getElementById('pCurrentPassword').value;
+                const newPassword = document.getElementById('pNewPassword').value;
+                const confirmPassword = document.getElementById('pConfirmPassword').value;
+
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    errorEl.textContent = 'Completá todos los campos.';
+                    return;
+                }
+                if (newPassword.length < 6) {
+                    errorEl.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
+                    return;
+                }
+                if (newPassword !== confirmPassword) {
+                    errorEl.textContent = 'Las contraseñas nuevas no coinciden.';
+                    return;
+                }
+
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    errorEl.textContent = 'No hay sesión activa.';
+                    return;
+                }
+
+                const btn = document.getElementById('btnCambiarPasswordPerfil');
+                btn.disabled = true;
+                btn.textContent = 'CAMBIANDO...';
+
+                try {
+                    const res = await fetch('/api/perfil/password', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify({ currentPassword, newPassword }),
+                    });
+                    const data = await res.json();
+                    if (data.exito) {
+                        errorEl.style.color = '#27ae60';
+                        errorEl.textContent = '✓ Contraseña actualizada correctamente.';
+                        document.getElementById('pCurrentPassword').value = '';
+                        document.getElementById('pNewPassword').value = '';
+                        document.getElementById('pConfirmPassword').value = '';
+                        setTimeout(() => { errorEl.style.color = '#e74c3c'; errorEl.textContent = ''; }, 3000);
+                    } else {
+                        errorEl.textContent = data.error || 'Error al cambiar la contraseña.';
+                    }
+                } catch {
+                    errorEl.textContent = 'Error de conexión con el servidor.';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'CAMBIAR CONTRASEÑA';
+                }
             });
 
             // ─── AUTO-AVANCE ENTRE INPUTS ───
@@ -944,6 +1030,8 @@
                 const codigo = Array.from(document.querySelectorAll('.recover-code')).map(inp => inp.value).join('');
                 const errorEl = document.getElementById('recoverCodeError');
                 errorEl.textContent = '';
+                const tipo = recoveryMode === 'email' ? 'dni' : 'email';
+                console.log('[RECOVER-FE] Step 2 - Enviando:', { recoveryIdentificador, recoveryMode, tipo, codigo });
 
                 if (codigo.length < 6) {
                     errorEl.textContent = 'Ingresá el código completo.';
@@ -960,11 +1048,12 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             identificador: recoveryIdentificador,
-                            tipo: recoveryMode === 'email' ? 'dni' : 'email',
+                            tipo,
                             codigo,
                         }),
                     });
                     const data = await res.json();
+                    console.log('[RECOVER-FE] Step 2 - Respuesta:', data);
                     if (data.exito) {
                         document.getElementById('recoverStep2').style.display = 'none';
                         document.getElementById('recoverStep2b').style.display = 'block';
@@ -978,7 +1067,8 @@
                         btn.disabled = false;
                         btn.textContent = 'VERIFICAR CÓDIGO';
                     }
-                } catch {
+                } catch (err) {
+                    console.log('[RECOVER-FE] Step 2 - Error de conexión:', err);
                     errorEl.textContent = 'Error de conexión con el servidor.';
                     btn.disabled = false;
                     btn.textContent = 'VERIFICAR CÓDIGO';
@@ -988,16 +1078,18 @@
             // Step 2b: Set new password (code already verified)
             document.getElementById('btnCambiarPassword').addEventListener('click', async () => {
                 const codigo = Array.from(document.querySelectorAll('.recover-code')).map(inp => inp.value).join('');
-                const password = document.getElementById('recoverPassword').value;
-                const confirm = document.getElementById('recoverConfirm').value;
+                const newPassword = document.getElementById('recoverPassword').value;
+                const confirmPassword = document.getElementById('recoverConfirm').value;
                 const errorEl = document.getElementById('recoverPasswordError');
                 errorEl.textContent = '';
+                const tipo = recoveryMode === 'email' ? 'dni' : 'email';
+                console.log('[RECOVER-FE] Step 2b - Enviando:', { recoveryIdentificador, recoveryMode, tipo, codigo, passwordLength: newPassword.length });
 
-                if (password.length < 6) {
+                if (newPassword.length < 6) {
                     errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
                     return;
                 }
-                if (password !== confirm) {
+                if (newPassword !== confirmPassword) {
                     errorEl.textContent = 'Las contraseñas no coinciden.';
                     return;
                 }
@@ -1012,12 +1104,13 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             identificador: recoveryIdentificador,
-                            tipo: recoveryMode === 'email' ? 'dni' : 'email',
+                            tipo,
                             codigo,
-                            nuevaPassword: password,
+                            nuevaPassword: newPassword,
                         }),
                     });
                     const data = await res.json();
+                    console.log('[RECOVER-FE] Step 2b - Respuesta:', data);
                     if (data.exito) {
                         document.getElementById('recoverStep2b').style.display = 'none';
                         document.getElementById('recoverStep3').style.display = 'block';
@@ -1035,7 +1128,8 @@
                         btn.disabled = false;
                         btn.textContent = 'CAMBIAR CONTRASEÑA';
                     }
-                } catch {
+                } catch (err) {
+                    console.log('[RECOVER-FE] Step 2b - Error de conexión:', err);
                     errorEl.textContent = 'Error de conexión con el servidor.';
                     btn.disabled = false;
                     btn.textContent = 'CAMBIAR CONTRASEÑA';

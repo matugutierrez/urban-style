@@ -336,6 +336,44 @@ app.put('/api/perfil', async (req, res) => {
     }
 });
 
+// ─── CAMBIAR CONTRASEÑA DESDE EL PERFIL ───
+app.put('/api/perfil/password', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) return res.status(401).json({ error: 'No autorizado.' });
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const usuarios = leerUsuarios();
+        const usuario = usuarios.find(u => u.id === decoded.id);
+        if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado.' });
+
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Completá todos los campos.' });
+        }
+        if (newPassword.length < 6) {
+            return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 6 caracteres.' });
+        }
+
+        const valida = await bcrypt.compare(currentPassword, usuario.password);
+        if (!valida) {
+            return res.status(400).json({ error: 'La contraseña actual es incorrecta.' });
+        }
+
+        usuario.password = await bcrypt.hash(newPassword, 10);
+        guardarUsuarios(usuarios);
+
+        res.json({ exito: true, mensaje: 'Contraseña actualizada correctamente.' });
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Sesión inválida o expirada.' });
+        }
+        res.status(500).json({ error: 'Error al cambiar la contraseña.' });
+    }
+});
+
 // ─── RECUPERAR EMAIL (por DNI) o CONTRASEÑA (por email) ───
 app.post('/api/recuperar-email', async (req, res) => {
     try {
@@ -402,34 +440,46 @@ app.post('/api/recuperar-email', async (req, res) => {
 app.post('/api/verificar-recuperacion', async (req, res) => {
     try {
         const { identificador, tipo, codigo, nuevaPassword } = req.body;
+        const paso = nuevaPassword ? 'cambiar-password' : 'verificar-codigo';
+        console.log(`[RECOVER] Request recibido: tipo=${tipo}, identificador="${identificador}", paso=${paso}, codigo="${codigo}", nuevaPassword.length=${nuevaPassword ? nuevaPassword.length : 0}`);
 
         if (!identificador || !tipo || !codigo) {
+            console.log(`[RECOVER] Error: campos faltantes`);
             return res.status(400).json({ error: 'Completá todos los campos.' });
         }
 
         const usuarios = leerUsuarios();
+        console.log(`[RECOVER] usuarios.json leído, ${usuarios.length} usuarios`);
         let usuario;
 
         if (tipo === 'dni') {
             usuario = usuarios.find(u => u.dni === identificador);
+            console.log(`[RECOVER] Buscando por DNI: "${identificador}" -> ${usuario ? usuario.email : 'NO ENCONTRADO'}`);
         } else {
             usuario = usuarios.find(u => u.email === identificador);
+            console.log(`[RECOVER] Buscando por EMAIL: "${identificador}" -> ${usuario ? usuario.email : 'NO ENCONTRADO'}`);
         }
 
         if (!usuario) {
+            console.log(`[RECOVER] Error: usuario no encontrado para tipo=${tipo}, identificador="${identificador}"`);
             return res.status(404).json({ error: 'Usuario no encontrado.' });
         }
 
+        console.log(`[RECOVER] Usuario encontrado: id=${usuario.id}, email=${usuario.email}, password_hash_suffix=...${usuario.password ? usuario.password.slice(-10) : 'UNDEFINED'}, tiene_codigoRecuperacion=${!!usuario.codigoRecuperacion}, tiene_expiracionRecuperacion=${!!usuario.expiracionRecuperacion}`);
+
         if (!usuario.codigoRecuperacion || usuario.codigoRecuperacion !== codigo) {
+            console.log(`[RECOVER] Error: código incorrecto. Esperado="${usuario.codigoRecuperacion}", recibido="${codigo}"`);
             return res.status(400).json({ error: 'Código incorrecto.' });
         }
 
         if (Date.now() > usuario.expiracionRecuperacion) {
+            console.log(`[RECOVER] Error: código expirado. expiracion=${usuario.expiracionRecuperacion}, ahora=${Date.now()}`);
             return res.status(400).json({ error: 'El código expiró. Solicitá uno nuevo.' });
         }
 
         // Step 1: just verify the code (no password yet)
         if (!nuevaPassword) {
+            console.log(`[RECOVER] Paso 1: código verificado correctamente para ${usuario.email}`);
             return res.json({
                 exito: true,
                 paso: 'codigo-verificado',
@@ -440,14 +490,51 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
 
         // Step 2: verify AND change password
         if (nuevaPassword.length < 6) {
+            console.log(`[RECOVER] Error: nuevaPassword demasiado corta (${nuevaPassword.length})`);
             return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
         }
 
         const hashedPassword = await bcrypt.hash(nuevaPassword, 10);
-        usuario.password = hashedPassword;
-        delete usuario.codigoRecuperacion;
-        delete usuario.expiracionRecuperacion;
-        guardarUsuarios(usuarios);
+        console.log(`[RECOVER] hash generado: ...${hashedPassword.slice(-10)}`);
+
+        // Re-leer usuarios post-async para evitar race conditions con otras operaciones
+        const usuariosActualizados = leerUsuarios();
+        const usuarioActualizado = usuariosActualizados.find(u => u.email === usuario.email);
+        if (!usuarioActualizado) {
+            console.log(`[RECOVER] ⚠️ Usuario ya no existe en post-async re-read!`);
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        console.log(`[RECOVER] Modificando usuario.password (antes: ...${usuarioActualizado.password ? usuarioActualizado.password.slice(-10) : 'UNDEFINED'})`);
+
+        usuarioActualizado.password = hashedPassword;
+        delete usuarioActualizado.codigoRecuperacion;
+        delete usuarioActualizado.expiracionRecuperacion;
+        guardarUsuarios(usuariosActualizados);
+
+        console.log(`[RECOVER] guardarUsuarios completado. Password hash guardado: ...${hashedPassword.slice(-10)}`);
+
+        // Verificación post-guardado: leer el archivo y confirmar
+        const usuariosPost = leerUsuarios();
+        const usuarioPost = usuariosPost.find(u => u.id === usuarioActualizado.id);
+        if (usuarioPost) {
+            console.log(`[RECOVER] VERIFICACIÓN POST-GUARDADO: password hash en archivo = ...${usuarioPost.password.slice(-10)}, coincide=${usuarioPost.password === hashedPassword}`);
+            if (usuarioPost.password !== hashedPassword) {
+                console.log(`[RECOVER] ⚠️ ¡EL HASH NO COINCIDE! Race condition detectada, reintentando guardar...`);
+                // Reintentar: volver a leer, modificar y guardar
+                const usuariosReintento = leerUsuarios();
+                const usuarioReintento = usuariosReintento.find(u => u.id === usuarioActualizado.id);
+                if (usuarioReintento) {
+                    usuarioReintento.password = hashedPassword;
+                    delete usuarioReintento.codigoRecuperacion;
+                    delete usuarioReintento.expiracionRecuperacion;
+                    guardarUsuarios(usuariosReintento);
+                    console.log(`[RECOVER] Reintento completado`);
+                }
+            }
+        } else {
+            console.log(`[RECOVER] ⚠️ Usuario no encontrado en verificación post-guardado`);
+        }
 
         res.json({
             exito: true,
@@ -456,7 +543,7 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
             email: usuario.email,
         });
     } catch (error) {
-        console.error('Error al verificar recuperación:', error);
+        console.error('[RECOVER] Error al verificar recuperación:', error);
         res.status(500).json({ error: 'Error al procesar la solicitud.' });
     }
 });
