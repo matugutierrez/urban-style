@@ -726,7 +726,7 @@ app.post('/api/orders', async (req, res) => {
             total: total - descuento,
             shipping,
             metodoPago: null,
-            estado: 'pendiente',
+            estado: 'creado',
             pagoVerificado: false,
             userId: usuario ? usuario.id : null,
         };
@@ -995,6 +995,15 @@ app.post('/api/create-preference', async (req, res) => {
         const { orderId, total, email, items } = req.body;
         const descripcion = items ? items.map(i => `${i.nombre} x${i.cantidad}`).join(', ') : `Orden #${orderId}`;
 
+        // Marcar orden como pendiente al iniciar pago con MP
+        const ordenes = leerOrdenes();
+        const orden = ordenes.find(o => o.id === orderId);
+        if (orden && orden.estado === 'creado') {
+            orden.estado = 'pendiente';
+            orden.metodoPago = 'mercadopago';
+            guardarOrdenes(ordenes);
+        }
+
         const preference = await new Preference(mpClient).create({
             body: {
                 items: [{
@@ -1036,6 +1045,13 @@ app.post('/api/process-card-payment', async (req, res) => {
 
         if (!orden) return res.status(404).json({ error: 'Orden no encontrada.' });
         if (orden.pagoVerificado) return res.status(400).json({ error: 'Esta orden ya fue pagada.' });
+
+        // Marcar orden como pendiente al iniciar pago con tarjeta
+        if (orden.estado === 'creado') {
+            orden.estado = 'pendiente';
+            orden.metodoPago = 'tarjeta';
+            guardarOrdenes(ordenes);
+        }
 
         const payment = await new Payment(mpClient).create({
             body: {

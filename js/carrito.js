@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderizarCarrito() {
         const carrito = obtenerCarrito();
 
-        // Verificar si hay un pedido pendiente de pago
+        // Verificar si el último pedido pendiente ya fue pagado
         const pendingId = localStorage.getItem('pendingOrderId');
         if (pendingId) {
             fetch('/api/orders/' + pendingId)
@@ -72,12 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (carrito.length === 0) {
-            if (localStorage.getItem('pendingOrderId')) {
-                carritoVacio.innerHTML = '<div style="text-align:center;padding:60px 20px;"><div style="font-size:48px;margin-bottom:16px;">⏳</div><h3 style="font-size:20px;margin-bottom:8px;">Pedido pendiente</h3><p style="color:#666;font-size:14px;margin-bottom:4px;">Ya realizaste un pedido que está siendo procesado.</p><p style="color:#999;font-size:13px;">Te enviaremos un email cuando el pago sea confirmado.</p></div>';
-                carritoVacio.style.display = 'block';
-                carritoGrid.style.display = 'none';
-                return;
-            }
             carritoVacio.style.display = 'block';
             carritoGrid.style.display = 'none';
             return;
@@ -175,10 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btnFinalizar.addEventListener('click', () => {
         const carrito = obtenerCarrito();
         if (carrito.length === 0) return;
-        if (localStorage.getItem('pendingOrderId')) {
-            alert('Ya tenés un pedido pendiente. Esperá a que el pago sea confirmado para realizar otro.');
-            return;
-        }
         // Auto-fill from user profile data
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         if (usuario && usuario.datosEnvio) {
