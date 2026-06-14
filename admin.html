@@ -69,6 +69,24 @@
         .stock-cell { display: flex; align-items: center; gap: 8px; }
         .stock-cell input { width: 60px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; font-family: inherit; }
         .stock-cell button { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: inherit; font-weight: 600; }
+        .bulk-stock-editor { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+        .bulk-stock-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; cursor: pointer; user-select: none; }
+        .bulk-stock-header:hover { background: #f0f0f0; }
+        .bulk-stock-header span { font-size: 13px; font-weight: 600; }
+        .bulk-stock-header .arrow { transition: transform .2s; font-size: 11px; }
+        .bulk-stock-header .arrow.open { transform: rotate(180deg); }
+        .bulk-stock-body { padding: 0 16px 16px; display: none; }
+        .bulk-stock-body.open { display: block; }
+        .bulk-stock-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .bulk-stock-row label { font-size: 12px; font-weight: 600; color: #666; white-space: nowrap; }
+        .bulk-stock-row select,
+        .bulk-stock-row input[type="number"] { padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; }
+        .bulk-stock-row select:focus,
+        .bulk-stock-row input[type="number"]:focus { border-color: #000; }
+        .bulk-stock-row input[type="number"] { width: 80px; text-align: center; }
+        .bulk-stock-row .bulk-result { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 4px; }
+        .bulk-result.ok { background: #e8f5e9; color: #2e7d32; }
+        .bulk-result.err { background: #fbe9e7; color: #c62828; }
         .image-upload-group { display: flex; gap: 8px; }
         .image-upload-group input { flex: 1; }
         .btn-upload { display: inline-block; padding: 10px 16px; background: #f0f0f0; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; white-space: nowrap; }
@@ -127,6 +145,33 @@
                 <div class="actions">
                     <button class="btn-secondary" onclick="cargarProductos()">↻ Actualizar</button>
                     <button class="btn-primary" onclick="mostrarFormulario()">+ Nuevo producto</button>
+                </div>
+            </div>
+            <div class="bulk-stock-editor">
+                <div class="bulk-stock-header" onclick="toggleBulkEditor()">
+                    <span>📦 Editor masivo de stock</span>
+                    <span class="arrow" id="bulkArrow">▼</span>
+                </div>
+                <div class="bulk-stock-body" id="bulkBody">
+                    <div class="bulk-stock-row">
+                        <label>Acción:</label>
+                        <select id="bulkAction">
+                            <option value="set">Establecer</option>
+                            <option value="add">Sumar</option>
+                            <option value="subtract">Restar</option>
+                        </select>
+                        <label>Valor:</label>
+                        <input type="number" id="bulkValue" value="0" min="0">
+                        <label>Categoría:</label>
+                        <select id="bulkCategory">
+                            <option value="all">Todas</option>
+                            <option value="remeras">Remeras</option>
+                            <option value="buzos">Buzos</option>
+                            <option value="pantalones">Pantalones</option>
+                        </select>
+                        <button class="btn-primary" onclick="aplicarStockMasivo()">Aplicar</button>
+                        <span class="bulk-result" id="bulkResult"></span>
+                    </div>
                 </div>
             </div>
             <div class="table-wrap">
@@ -399,6 +444,51 @@
             .then(r => r.json())
             .then(data => {
                 if (data.exito) cargarProductos();
+            });
+        }
+
+        // ─── BULK STOCK ───
+        function toggleBulkEditor() {
+            const body = document.getElementById('bulkBody');
+            const arrow = document.getElementById('bulkArrow');
+            body.classList.toggle('open');
+            arrow.classList.toggle('open');
+        }
+
+        function aplicarStockMasivo() {
+            const action = document.getElementById('bulkAction').value;
+            const value = parseInt(document.getElementById('bulkValue').value);
+            const categoria = document.getElementById('bulkCategory').value;
+            const resultEl = document.getElementById('bulkResult');
+
+            if (isNaN(value) || value < 0) {
+                resultEl.className = 'bulk-result err';
+                resultEl.textContent = 'Valor inválido';
+                return;
+            }
+
+            resultEl.textContent = 'Aplicando...';
+            resultEl.className = 'bulk-result';
+
+            fetch('/api/admin/productos/bulk-stock', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ action, value, categoria })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.exito) {
+                    resultEl.className = 'bulk-result ok';
+                    resultEl.textContent = '✓ ' + data.modificados + ' producto(s) modificado(s)';
+                    cargarProductos();
+                } else {
+                    resultEl.className = 'bulk-result err';
+                    resultEl.textContent = data.error || 'Error';
+                }
+            })
+            .catch(() => {
+                resultEl.className = 'bulk-result err';
+                resultEl.textContent = 'Error de conexión';
             });
         }
 

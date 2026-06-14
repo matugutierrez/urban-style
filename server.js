@@ -1340,6 +1340,51 @@ app.put('/api/admin/productos/:id', authAdmin, (req, res) => {
     }
 });
 
+// Editar stock masivo
+app.post('/api/admin/productos/bulk-stock', authAdmin, (req, res) => {
+    try {
+        const { action, value, categoria } = req.body;
+        if (!action || value === undefined || value === null) {
+            return res.status(400).json({ error: 'Acción y valor son requeridos.' });
+        }
+        if (!['set', 'add', 'subtract'].includes(action)) {
+            return res.status(400).json({ error: 'Acción inválida. Usá set, add o subtract.' });
+        }
+
+        const productos = leerProductos();
+        let modificados = 0;
+
+        productos.forEach(p => {
+            if (categoria && categoria !== 'all' && p.categoria !== categoria) return;
+
+            const current = p.stock ?? 0;
+            let nuevo;
+            if (action === 'set') nuevo = Math.max(0, Number(value));
+            else if (action === 'add') nuevo = current + Number(value);
+            else if (action === 'subtract') nuevo = Math.max(0, current - Number(value));
+
+            if (nuevo !== current) {
+                p.stock = nuevo;
+                // Actualizar stockPorTalle si existe
+                if (p.stockPorTalle && Array.isArray(p.talles) && p.talles.length > 0) {
+                    const porTalle = Math.floor(nuevo / p.talles.length);
+                    const resto = nuevo % p.talles.length;
+                    p.talles.forEach((t, i) => {
+                        p.stockPorTalle[t] = porTalle + (i < resto ? 1 : 0);
+                    });
+                }
+                modificados++;
+            }
+        });
+
+        guardarProductos(productos);
+        res.json({ exito: true, modificados });
+    } catch (error) {
+        console.error('Error al editar stock masivo:', error);
+        res.status(500).json({ error: 'Error al editar stock masivo.' });
+    }
+});
+
 // Eliminar producto
 app.delete('/api/admin/productos/:id', authAdmin, (req, res) => {
     try {
