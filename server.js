@@ -21,6 +21,7 @@ const mpClient = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKE
 
 // Multer config (for receipt uploads)
 const RECEIPTS_PATH = path.join(__dirname, 'receipts');
+if (!fs.existsSync(RECEIPTS_PATH)) fs.mkdirSync(RECEIPTS_PATH, { recursive: true });
 const upload = multer({ dest: RECEIPTS_PATH }).single('comprobante');
 
 // Multer config (for product image uploads)
@@ -287,16 +288,30 @@ app.post('/api/login', async (req, res) => {
         }
 
         const usuarios = leerUsuarios();
+        console.log(`[LOGIN] Intento de login para email="${email}", ${usuarios.length} usuarios en db`);
         const usuario = usuarios.find(u => u.email === email);
 
         if (!usuario) {
+            console.log(`[LOGIN] Usuario no encontrado para email="${email}"`);
             return res.status(400).json({ error: 'Email o contraseña incorrectos.' });
         }
 
-        const passwordValida = await bcrypt.compare(password, usuario.password);
+        console.log(`[LOGIN] Usuario encontrado: id=${usuario.id}, password_hash_suffix=...${usuario.password ? usuario.password.slice(-8) : 'UNDEFINED'}`);
+
+        let passwordValida;
+        try {
+            passwordValida = await bcrypt.compare(password, usuario.password);
+        } catch (bcryptErr) {
+            console.error(`[LOGIN] bcrypt.compare falló:`, bcryptErr);
+            return res.status(500).json({ error: 'Error al verificar contraseña.' });
+        }
+
         if (!passwordValida) {
+            console.log(`[LOGIN] Contraseña incorrecta para email="${email}"`);
             return res.status(400).json({ error: 'Email o contraseña incorrectos.' });
         }
+
+        console.log(`[LOGIN] Login exitoso para email="${email}"`);
 
         const token = jwt.sign(
             { id: usuario.id, nombre: usuario.nombre, email: usuario.email },
@@ -310,7 +325,7 @@ app.post('/api/login', async (req, res) => {
             usuario: { nombre: usuario.nombre, email: usuario.email, dni: usuario.dni, fecha: usuario.fecha, datosEnvio: usuario.datosEnvio || {} },
         });
     } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('[LOGIN] Error al iniciar sesión:', error);
         res.status(500).json({ error: 'Error al iniciar sesión.' });
     }
 });
@@ -911,12 +926,17 @@ app.post('/api/orders/:id/submit-receipt', (req, res) => {
                 path: archivo.path,
             }] : [];
 
-            await sgMail.send({
-                from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, replyTo: REPLY_TO,
-                subject: `Comprobante recibido - Orden #${orden.id} - ${orden.cliente.nombre}`,
-                html: `<h2>Comprobante de transferencia recibido</h2><p><strong>Orden:</strong> #${orden.id}</p><p><strong>Cliente:</strong> ${orden.cliente.nombre}</p><p><strong>Email:</strong> ${orden.cliente.email}</p><p><strong>Teléfono:</strong> ${orden.cliente.telefono || '-'}</p><p><strong>Referencia:</strong> ${referencia || '(sin referencia)'}</p><p><strong>Total:</strong> $${Math.round(orden.total).toLocaleString('es-AR')}</p><p><strong>Envío:</strong> ${orden.shipping}</p>${archivo ? `<p><strong>Comprobante:</strong> adjunto en este email</p>` : '<p><strong>Comprobante:</strong> no se adjuntó archivo</p>'}<br><p>Para confirmar el pago, hacé clic en el siguiente enlace:</p><p><a href="${BASE_URL}/api/orders/${orden.id}/confirm-payment" style="display:inline-block;background:#27ae60;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:700;">✓ CONFIRMAR PAGO</a></p><p style="color:#999;font-size:12px;margin-top:12px;">O usá el endpoint: POST /api/orders/${orden.id}/confirm-payment</p>`,
-                attachments,
-            });
+            // Notificar al admin por email (no crítico si falla)
+            try {
+                await sgMail.send({
+                    from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, replyTo: REPLY_TO,
+                    subject: `Comprobante recibido - Orden #${orden.id} - ${orden.cliente.nombre}`,
+                    html: `<h2>Comprobante de transferencia recibido</h2><p><strong>Orden:</strong> #${orden.id}</p><p><strong>Cliente:</strong> ${orden.cliente.nombre}</p><p><strong>Email:</strong> ${orden.cliente.email}</p><p><strong>Teléfono:</strong> ${orden.cliente.telefono || '-'}</p><p><strong>Referencia:</strong> ${referencia || '(sin referencia)'}</p><p><strong>Total:</strong> $${Math.round(orden.total).toLocaleString('es-AR')}</p><p><strong>Envío:</strong> ${orden.shipping}</p>${archivo ? `<p><strong>Comprobante:</strong> adjunto en este email</p>` : '<p><strong>Comprobante:</strong> no se adjuntó archivo</p>'}<br><p>Para confirmar el pago, hacé clic en el siguiente enlace:</p><p><a href="${BASE_URL}/api/orders/${orden.id}/confirm-payment" style="display:inline-block;background:#27ae60;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:700;">✓ CONFIRMAR PAGO</a></p><p style="color:#999;font-size:12px;margin-top:12px;">O usá el endpoint: POST /api/orders/${orden.id}/confirm-payment</p>`,
+                    attachments,
+                });
+            } catch (emailErr) {
+                console.error('Error al enviar email de comprobante al admin:', emailErr);
+            }
 
             res.json({ exito: true, mensaje: 'Comprobante enviado. Esperá la confirmación del pago.' });
         } catch (error) {
