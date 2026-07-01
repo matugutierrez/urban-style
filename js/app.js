@@ -1,4 +1,4 @@
-// ─── PRODUCT DETAIL FULL-SCREEN OVERLAY ───
+
 let modalProducto = null;
 let talleSeleccionado = null;
 let modalCantidad = 1;
@@ -99,13 +99,13 @@ function crearModalProducto() {
     modalProducto.querySelector('.modal-backdrop').addEventListener('click', cerrarModalProducto);
     modalProducto.querySelector('.modal-cerrar').addEventListener('click', cerrarModalProducto);
 
-    // Guía de talles
+    
     document.getElementById('btnGuiaTalles').addEventListener('click', (e) => {
         e.preventDefault();
         mostrarGuiaTalles();
     });
 
-    // Color selector
+    
     modalProducto.querySelectorAll('.color-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             modalProducto.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -114,7 +114,7 @@ function crearModalProducto() {
         });
     });
 
-    // Cantidad
+    
     document.getElementById('btnCantMenos').addEventListener('click', () => {
         if (modalCantidad > 1) {
             modalCantidad--;
@@ -129,7 +129,7 @@ function crearModalProducto() {
         }
     });
 
-    // Info tabs
+    
     document.querySelectorAll('.detalles-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.detalles-tab').forEach(t => t.classList.remove('active'));
@@ -140,7 +140,7 @@ function crearModalProducto() {
         });
     });
 
-    // Add to cart
+    
     modalProducto.querySelector('#modalAgregar').addEventListener('click', () => {
         if (!talleSeleccionado) {
             document.getElementById('talleRequired').style.color = '#e74c3c';
@@ -242,7 +242,7 @@ function abrirModalProducto(id) {
     document.getElementById('modalPrecio').textContent = precioFormateado;
     document.getElementById('modalCuotas').textContent = `Hasta ${prod.cuotasCon} cuotas sin interés de $${valorCuota.toLocaleString('es-AR')}`;
 
-    // Indicador de stock
+    
     const stockEl = document.getElementById('modalStock');
     const stock = prod.stock ?? 0;
     stockEl.className = 'modal-stock';
@@ -273,13 +273,13 @@ function abrirModalProducto(id) {
 
     document.getElementById('modalDescripcion').textContent = prod.descripcion;
 
-    // Reset info tab
+    
     document.querySelectorAll('.detalles-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.detalles-panel').forEach(p => p.classList.remove('active'));
     document.querySelector('.detalles-tab[data-tab="descripcion"]').classList.add('active');
     document.getElementById('detalleDescripcion').classList.add('active');
 
-    // Talles
+    
     const talleReq = document.getElementById('talleRequired');
     talleReq.style.color = '#999';
     const container = document.getElementById('modalTallesContainer');
@@ -297,7 +297,7 @@ function abrirModalProducto(id) {
         container.appendChild(btn);
     });
 
-    // Galería de imágenes
+    
     const thumbsContainer = document.getElementById('modalThumbs');
     thumbsContainer.innerHTML = '';
     const todasImagenes = [prod.imagen, ...(prod.imagenes || [])];
@@ -320,7 +320,7 @@ function abrirModalProducto(id) {
         thumbsContainer.appendChild(thumb);
     });
 
-    // Productos relacionados (misma categoría, excluir actual)
+    
     const relacionados = productos.filter(p => p.categoria === prod.categoria && p.id !== prod.id).slice(0, 4);
     const relGrid = document.getElementById('modalRelacionados');
     relGrid.innerHTML = '';
@@ -344,7 +344,7 @@ function abrirModalProducto(id) {
 
     modalProducto.classList.add('active');
     document.body.style.overflow = 'hidden';
-    // Scroll to top
+    
     modalProducto.querySelector('.modal-scroll').scrollTop = 0;
 }
 
@@ -385,7 +385,7 @@ closeSearch.addEventListener("click", () => {
 
 });
 
-// Función global para actualizar la cantidad del carrito en el badge de la barra de navegación
+
 function actualizarBadgeCarrito() {
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     const totalCantidad = carrito.reduce((sum, item) => sum + item.cantidad, 0);
@@ -408,44 +408,44 @@ function actualizarBadgeCarrito() {
     }
 }
 
-// Ejecutar al cargar la página
+
 document.addEventListener('DOMContentLoaded', () => {
     actualizarBadgeCarrito();
     crearModalProducto();
 });
 
-// Escuchar tecla Enter en el input de búsqueda global
+
 const searchInput = document.querySelector(".search-input");
 if (searchInput) {
     searchInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
             const query = searchInput.value.trim();
             if (query) {
-                // Cerrar el buscador
+                
                 const searchMenu = document.querySelector(".search-menu");
                 if (searchMenu) {
                     searchMenu.classList.remove("active");
                 }
-                // Redirigir a buscar.html con el parámetro q
+                
                 window.location.href = "buscar.html?q=" + encodeURIComponent(query);
             }
         }
     });
 }
 
-// ─── MOBILE HAMBURGER MENU ───
+
 document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('header');
     const nav = document.querySelector('nav');
     if (!header || !nav) return;
 
-    // Create hamburger button
+    
     const hamburger = document.createElement('button');
     hamburger.className = 'hamburger';
     hamburger.setAttribute('aria-label', 'Menú');
     hamburger.innerHTML = '<span></span><span></span><span></span>';
 
-    // Insert after logo
+    
     const logo = header.querySelector('.logo');
     if (logo) {
         logo.after(hamburger);
@@ -453,12 +453,12 @@ document.addEventListener('DOMContentLoaded', () => {
         header.insertBefore(hamburger, nav);
     }
 
-    // Create mobile menu overlay (solo en pantallas ≤600px)
+    
     if (window.innerWidth <= 600) {
         const mobileMenu = document.createElement('div');
         mobileMenu.className = 'mobile-menu';
 
-        // Collect all nav links and icon links (except cart)
+        
         const allLinks = [];
         nav.querySelectorAll('a').forEach(a => {
             allLinks.push({ href: a.getAttribute('href'), text: a.textContent });

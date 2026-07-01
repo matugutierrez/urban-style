@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderizarCarrito() {
         const carrito = obtenerCarrito();
 
-        // Verificar si el último pedido pendiente ya fue pagado
+        
         const pendingId = localStorage.getItem('pendingOrderId');
         if (pendingId) {
             fetch('/api/orders/' + pendingId)
@@ -169,14 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnFinalizar.addEventListener('click', () => {
         const carrito = obtenerCarrito();
         if (carrito.length === 0) return;
-        // Auto-fill from user profile data
+        
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         if (usuario && usuario.datosEnvio) {
             const d = usuario.datosEnvio;
             if (d.telefono) checkoutTelefono.value = d.telefono;
             if (d.direccion) checkoutDireccion.value = d.direccion;
         }
-        // Also pre-fill nombre and email from user account
+        
         if (usuario) {
             if (usuario.nombre && !checkoutNombre.value) checkoutNombre.value = usuario.nombre;
             if (usuario.email && !checkoutEmail.value) checkoutEmail.value = usuario.email;
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const envioMetodo = checkoutEnvio.value;
         costoEnvio = costosEnvio[envioMetodo] || 0;
 
-        // Retiro en local: auto-fill dirección y deshabilitar campo
+        
         const dirLabel = checkoutDireccion.previousElementSibling;
         if (envioMetodo === 'retiro') {
             checkoutDireccion.value = 'Av. Corrientes 1234, CABA';
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (dirLabel) dirLabel.textContent = 'Dirección';
         }
 
-        // Check first purchase discount
+        
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         descuentoAplicado = 0;
         if (usuario && carrito.length >= 2) {
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resumenTotal2.textContent = formatearPrecio(total);
     }
 
-    // ─── CREAR ORDEN ───
+    
     formCheckout.addEventListener('submit', async (e) => {
         e.preventDefault();
         btnCrearOrden.disabled = true;
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const direccion = checkoutDireccion.value.trim();
         const envioMetodo = checkoutEnvio.value;
 
-        // Validar datos reales
+        
         if (nombre.split(/\s+/).length < 2) {
             alert('Ingresá nombre y apellido.');
             btnCrearOrden.disabled = false;
@@ -342,12 +342,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.querySelector('.pago-check').textContent = '○';
                     el.style.borderColor = '#eee';
                 });
-                // Set payment amounts
+                
                 const montoStr = '$' + Math.round(total).toLocaleString('es-AR');
                 document.getElementById('pagoMontoTransferencia').textContent = montoStr;
                 document.getElementById('pagoMontoTarjeta').textContent = montoStr;
                 document.getElementById('pagoMontoMP').textContent = montoStr;
-                // No vaciar carrito — queda hasta que el dueño confirme el pago
+                
                 localStorage.setItem('pendingOrderId', data.orden.id);
                 if (typeof actualizarBadgeCarrito === 'function') actualizarBadgeCarrito();
             } else {
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCrearOrden.textContent = 'COMPRAR';
     });
 
-    // ─── SELECCIÓN DE PAGO ───
+    
     document.querySelectorAll('.pago-opcion').forEach(opcion => {
         const header = opcion.querySelector('div[style*="cursor:pointer"]') || opcion;
         const detalle = opcion.querySelector('.pago-detalle');
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ─── PAGO: TRANSFERENCIA ───
+    
     document.getElementById('btnPagoTransferencia').addEventListener('click', async () => {
         if (!ordenActual) return;
         const btn = document.getElementById('btnPagoTransferencia');
@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ─── PAGO: TARJETA ───
+    
     let mpCardForm = null;
 
     function initMercadoPago() {
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('btnPagoTarjeta');
         btn.disabled = true;
 
-        // Validar campos manualmente
+        
         const number = document.getElementById('cardNumber').value.trim();
         const expiry = document.getElementById('cardExpirationDate').value.trim();
         const cvv = document.getElementById('cardCvv').value.trim();
@@ -519,14 +519,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mpCardForm.submit();
     });
 
-    // ─── PAGO: MERCADO PAGO (Checkout Pro) ───
+    
     document.getElementById('btnPagoMP').addEventListener('click', async () => {
         if (!ordenActual) return;
         const btn = document.getElementById('btnPagoMP');
         btn.disabled = true;
         btn.textContent = 'REDIRIGIENDO...';
         try {
-            // Crear preferencia y redirigir
+            
             const res = await fetch('/api/create-preference', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Init Mercado Pago on page load
+    
     setTimeout(initMercadoPago, 500);
 
     function mostrarExito(ordenId, metodo) {
@@ -567,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof actualizarBadgeCarrito === 'function') actualizarBadgeCarrito();
     }
 
-    // ─── FORMATO AUTOMÁTICO DE TARJETA ───
+    
     document.getElementById('cardNumber').addEventListener('input', function () {
         let val = this.value.replace(/\D/g, '').substring(0, 16);
         this.value = val.replace(/(\d{4})(?=\d)/g, '$1-');

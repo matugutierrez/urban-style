@@ -99,7 +99,7 @@
             return { text: '⏳ Los productos están cargándose. Esperá un momento y volvé a preguntar.', options: null };
         }
 
-        // ─── Producto más barato / económico ───
+        
         if (/\b(?:mas\s)?barato|mas\s?economico|menor\s?precio|mas\s?chico\s?precio\b/.test(nq)
             && !/(?:talle|medida|guia)/.test(nq)) {
             const catMatch = nq.match(/(remeras?|buzos?|pantalones?|pantalon)/);
@@ -120,7 +120,7 @@
             return { text: resp, options: QUICK_OPTIONS };
         }
 
-        // ─── Producto más caro ───
+        
         if (/\b(?:mas\s)?caro|mayor\s?precio|mas\s?grande\s?precio\b/.test(nq)) {
             const catMatch = nq.match(/(remeras?|buzos?|pantalones?|pantalon)/);
             let pool = chatProducts;
@@ -134,7 +134,7 @@
             return { text: `💎 El producto más caro${catLabel} es <b>${sorted[0].nombre}</b> — ${formatPrice(sorted[0].precio)}`, options: QUICK_OPTIONS };
         }
 
-        // ─── Rango de precio ───
+        
         const rangeMatch = nq.match(/(?:entre|de)\s*(\d{3,})[.\s]*(?:\s*a\s*|\s*(-)\s*|y)\s*(\d{3,})/);
         if (rangeMatch) {
             const min = parseInt(rangeMatch[1]);
@@ -148,7 +148,7 @@
             return { text: resp, options: QUICK_OPTIONS };
         }
 
-        // ─── Mostrar categoría (remeras, buzos, pantalones) ───
+        
         const catQuery = nq.match(/(?:mostrame?|quiero\s?ver|lista|tienen?|hay|mostrar|que\s?hay\s?de)\s*(remeras?|buzos?|pantalones?|pantalon)/);
         if (catQuery) {
             const catName = catQuery[1].replace(/s$/, '') + 's';
@@ -162,7 +162,7 @@
             return { text: resp, options: QUICK_OPTIONS };
         }
 
-        // ─── "Qué productos tienen" / "catálogo" / "productos" ───
+        
         if (/^(?:que\s?productos\s?tienen?|catalogo|listado|todos\s?los\s?productos|que\s?venden?|productos)$/.test(nq)) {
             const cats = ['remeras', 'buzos', 'pantalones'];
             let resp = '📋 <b>Nuestro catálogo completo:</b><br><br>';
@@ -177,7 +177,7 @@
             return { text: resp, options: QUICK_OPTIONS };
         }
 
-        // ─── Buscar producto por nombre ───
+        
         const productNames = chatProducts.filter(p => p.activo !== false).map(p => normalize(p.nombre));
         let matchedProduct = null;
         for (const p of chatProducts) {
@@ -192,13 +192,13 @@
             const p = matchedProduct;
             const price = formatPrice(p.precio);
 
-            // ─── "Qué talles" / "talles de" ───
+            
             if (/(?:que\s?talles|talles?\s?disponibles|talles?\s?de|medidas?)(?:\s*de|\s*para|\s*del)?/.test(nq)) {
                 const talles = p.talles || [];
                 return { text: `📏 <b>${p.nombre}</b> — Talles disponibles:<br><br>${talles.join(' — ')}`, options: QUICK_OPTIONS };
             }
 
-            // ─── "Hay stock" / "stock de" / "disponible" ───
+            
             if (/(?:hay\s?stock|stock\s?de|disponible|queda)/.test(nq)) {
                 const stock = p.stock ?? 0;
                 if (stock <= 0) return { text: `❌ <b>${p.nombre}</b> — Sin stock en este momento.`, options: QUICK_OPTIONS };
@@ -212,13 +212,13 @@
                 return { text: resp, options: QUICK_OPTIONS };
             }
 
-            // ─── "Cuánto cuesta" / "precio" ───
+            
             if (/(?:cuanto\s?cuesta|cuanto\s?sale|precio\s?de|que\s?precio|cual\s?es\s?el\s?precio)/.test(nq)) {
                 const cuota = Math.ceil(p.precio / p.cuotasCon);
                 return { text: `💰 <b>${p.nombre}</b> — ${price}<br>📆 Hasta ${p.cuotasCon} cuotas sin interés de ${formatPrice(cuota)}`, options: QUICK_OPTIONS };
             }
 
-            // ─── Info general del producto ───
+            
             const cuota = Math.ceil(p.precio / p.cuotasCon);
             const stockLabel = p.stock <= 0 ? '❌ Sin stock' : (p.stock <= 5 ? `⚠️ Últimas unidades (${p.stock})` : `✅ En stock (${p.stock})`);
             let resp = `<b>${p.nombre}</b><br><br>`;

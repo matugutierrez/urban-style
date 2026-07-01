@@ -16,15 +16,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 const DB_PATH = path.join(__dirname, 'db', 'users.json');
 const ORDERS_PATH = path.join(__dirname, 'db', 'orders.json');
 
-// Mercado Pago client
 const mpClient = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 
-// Multer config (for receipt uploads)
 const RECEIPTS_PATH = path.join(__dirname, 'receipts');
 if (!fs.existsSync(RECEIPTS_PATH)) fs.mkdirSync(RECEIPTS_PATH, { recursive: true });
 const upload = multer({ dest: RECEIPTS_PATH }).single('comprobante');
 
-// Multer config (for product image uploads)
 const UPLOADS_PATH = path.join(__dirname, 'uploads');
 if (!fs.existsSync(UPLOADS_PATH)) fs.mkdirSync(UPLOADS_PATH, { recursive: true });
 const productUpload = multer({ dest: UPLOADS_PATH }).single('productImage');
@@ -40,7 +37,6 @@ sgMail.setApiKey(sgApiKey);
 const FROM_EMAIL = { email: 'uurbannstylee@gmail.com', name: 'Urban Style' };
 const REPLY_TO = 'uurbannstylee@gmail.com';
 
-// ─── BASE DE DATOS (JSON) ───
 function leerUsuarios() {
     try {
         const data = fs.readFileSync(DB_PATH, 'utf-8');
@@ -54,7 +50,6 @@ function guardarUsuarios(usuarios) {
     fs.writeFileSync(DB_PATH, JSON.stringify(usuarios, null, 2));
 }
 
-// ─── GENERAR CÓDIGO DE VERIFICACIÓN ───
 function generarCodigo() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let codigo = '';
@@ -64,7 +59,6 @@ function generarCodigo() {
     return codigo;
 }
 
-// ─── MIDDLEWARE: VERIFICAR TOKEN ───
 function autenticar(req, res, next) {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Token requerido' });
@@ -78,7 +72,6 @@ function autenticar(req, res, next) {
     }
 }
 
-// ─── RUTA: ENVIAR EMAIL DE CONTACTO ───
 app.post('/api/contacto', async (req, res) => {
     try {
         const { nombre, email, mensaje } = req.body;
@@ -106,7 +99,6 @@ app.post('/api/contacto', async (req, res) => {
     }
 });
 
-// ─── RUTA: REGISTRAR USUARIO ───
 app.post('/api/register', async (req, res) => {
     try {
         const { nombre, email, dni, password } = req.body;
@@ -135,7 +127,7 @@ app.post('/api/register', async (req, res) => {
         }
 
         const codigo = generarCodigo();
-        const expiracion = Date.now() + 10 * 60 * 1000; // 10 minutos
+        const expiracion = Date.now() + 10 * 60 * 1000; 
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const nuevoUsuario = {
@@ -171,7 +163,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// ─── RUTA: VERIFICAR CÓDIGO ───
 app.post('/api/verificar-codigo', async (req, res) => {
     try {
         const { email, codigo } = req.body;
@@ -227,7 +218,6 @@ app.post('/api/verificar-codigo', async (req, res) => {
     }
 });
 
-// ─── RUTA: REENVIAR CÓDIGO ───
 app.post('/api/reenviar-codigo', async (req, res) => {
     try {
         const { email } = req.body;
@@ -265,7 +255,6 @@ app.post('/api/reenviar-codigo', async (req, res) => {
     }
 });
 
-// ─── RUTA: INICIAR SESIÓN ───
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -274,7 +263,7 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ error: 'Completá todos los campos.' });
         }
 
-        // Detectar admin
+        
         const adminUser = process.env.ADMIN_USER || 'admin';
         const adminPass = process.env.ADMIN_PASS || 'admin123';
         if (email === adminUser && password === adminPass) {
@@ -330,7 +319,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// ─── GUARDAR DATOS DE PERFIL ───
 app.put('/api/perfil', async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
@@ -351,7 +339,6 @@ app.put('/api/perfil', async (req, res) => {
     }
 });
 
-// ─── CAMBIAR CONTRASEÑA DESDE EL PERFIL ───
 app.put('/api/perfil/password', async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
@@ -389,7 +376,6 @@ app.put('/api/perfil/password', async (req, res) => {
     }
 });
 
-// ─── RECUPERAR EMAIL (por DNI) o CONTRASEÑA (por email) ───
 app.post('/api/recuperar-email', async (req, res) => {
     try {
         const { dni, email } = req.body;
@@ -451,7 +437,6 @@ app.post('/api/recuperar-email', async (req, res) => {
     }
 });
 
-// ─── VERIFICAR CÓDIGO Y CAMBIAR CONTRASEÑA ───
 app.post('/api/verificar-recuperacion', async (req, res) => {
     try {
         const { identificador, tipo, codigo, nuevaPassword } = req.body;
@@ -492,7 +477,7 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
             return res.status(400).json({ error: 'El código expiró. Solicitá uno nuevo.' });
         }
 
-        // Step 1: just verify the code (no password yet)
+        
         if (!nuevaPassword) {
             console.log(`[RECOVER] Paso 1: código verificado correctamente para ${usuario.email}`);
             return res.json({
@@ -503,7 +488,7 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
             });
         }
 
-        // Step 2: verify AND change password
+        
         if (nuevaPassword.length < 6) {
             console.log(`[RECOVER] Error: nuevaPassword demasiado corta (${nuevaPassword.length})`);
             return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
@@ -512,7 +497,7 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
         const hashedPassword = await bcrypt.hash(nuevaPassword, 10);
         console.log(`[RECOVER] hash generado: ...${hashedPassword.slice(-10)}`);
 
-        // Re-leer usuarios post-async para evitar race conditions con otras operaciones
+        
         const usuariosActualizados = leerUsuarios();
         const usuarioActualizado = usuariosActualizados.find(u => u.email === usuario.email);
         if (!usuarioActualizado) {
@@ -529,14 +514,14 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
 
         console.log(`[RECOVER] guardarUsuarios completado. Password hash guardado: ...${hashedPassword.slice(-10)}`);
 
-        // Verificación post-guardado: leer el archivo y confirmar
+        
         const usuariosPost = leerUsuarios();
         const usuarioPost = usuariosPost.find(u => u.id === usuarioActualizado.id);
         if (usuarioPost) {
             console.log(`[RECOVER] VERIFICACIÓN POST-GUARDADO: password hash en archivo = ...${usuarioPost.password.slice(-10)}, coincide=${usuarioPost.password === hashedPassword}`);
             if (usuarioPost.password !== hashedPassword) {
                 console.log(`[RECOVER] ⚠️ ¡EL HASH NO COINCIDE! Race condition detectada, reintentando guardar...`);
-                // Reintentar: volver a leer, modificar y guardar
+                
                 const usuariosReintento = leerUsuarios();
                 const usuarioReintento = usuariosReintento.find(u => u.id === usuarioActualizado.id);
                 if (usuarioReintento) {
@@ -563,7 +548,6 @@ app.post('/api/verificar-recuperacion', async (req, res) => {
     }
 });
 
-// ─── CONTACTAR CUANDO NO SE RECUERDA EL DNI ───
 app.post('/api/contactar-dni', async (req, res) => {
     try {
         const { emailAlternativo, mensaje } = req.body;
@@ -593,7 +577,6 @@ app.post('/api/contactar-dni', async (req, res) => {
     }
 });
 
-// ─── SOLICITAR ELIMINACIÓN DE CUENTA (envía código) ───
 app.post('/api/solicitar-eliminacion', autenticar, async (req, res) => {
     try {
         const usuarios = leerUsuarios();
@@ -621,7 +604,6 @@ app.post('/api/solicitar-eliminacion', autenticar, async (req, res) => {
     }
 });
 
-// ─── VERIFICAR CÓDIGO Y ELIMINAR CUENTA ───
 app.post('/api/verificar-eliminacion', autenticar, async (req, res) => {
     try {
         const { codigo } = req.body;
@@ -657,12 +639,10 @@ app.post('/api/verificar-eliminacion', autenticar, async (req, res) => {
     }
 });
 
-// ─── RUTA: VERIFICAR TOKEN (para mantener sesión) ───
 app.get('/api/verificar', autenticar, (req, res) => {
     res.json({ valido: true, usuario: req.usuario });
 });
 
-// ─── ÓRDENES ───
 function leerOrdenes() {
     try {
         const data = fs.readFileSync(ORDERS_PATH, 'utf-8');
@@ -683,7 +663,6 @@ function enviarEmailHTML(to, subject, html) {
     });
 }
 
-// ─── RUTA: VERIFICAR SI ES PRIMERA COMPRA ───
 app.get('/api/orders/check-first', (req, res) => {
     const email = req.query.email;
     if (!email) return res.json({ esPrimeraCompra: false });
@@ -692,7 +671,6 @@ app.get('/api/orders/check-first', (req, res) => {
     res.json({ esPrimeraCompra: ordenesUsuario.length === 0 });
 });
 
-// ─── RUTA: CREAR ORDEN ───
 app.post('/api/orders', async (req, res) => {
     try {
         const { items, subtotal, envio, total, shipping, cliente, email, descuentoAplicado } = req.body;
@@ -701,7 +679,7 @@ app.post('/api/orders', async (req, res) => {
             return res.status(400).json({ error: 'Completá todos los campos obligatorios.' });
         }
 
-        // Validar stock disponible
+        
         const productosStock = leerProductos();
         for (const item of items) {
             const prod = productosStock.find(p => p.id === item.id || p.nombre === item.nombre);
@@ -720,7 +698,7 @@ app.post('/api/orders', async (req, res) => {
         const esPrimeraCompra = ordenesUsuario.length === 0;
         const tieneDosProductos = items.length >= 2;
 
-        // Aplicar descuento si corresponde
+        
         let descuento = 0;
         let descuentoMsg = '';
         if (esPrimeraCompra && tieneDosProductos) {
@@ -750,7 +728,7 @@ app.post('/api/orders', async (req, res) => {
         ordenes.push(orden);
         guardarOrdenes(ordenes);
 
-        // Dirección según método de envío
+        
         const dirEnvio = shipping === 'Retiro en local'
             ? 'Av. Corrientes 1234, CABA'
             : cliente.direccion;
@@ -763,7 +741,7 @@ app.post('/api/orders', async (req, res) => {
             </tr>
         `).join('');
 
-        // Email de confirmación de orden al comprador
+        
         await enviarEmailHTML(email, `Orden #${ordenId} recibida - Urban Style`, `
             <h2 style="text-align:center;font-size:20px;font-weight:700;margin-bottom:6px;">¡Gracias por tu compra!</h2>
             <p style="text-align:center;color:#666;font-size:14px;margin-bottom:20px;">Tu orden <strong>#${ordenId}</strong> fue registrada con éxito.</p>
@@ -811,7 +789,6 @@ app.post('/api/orders', async (req, res) => {
     }
 });
 
-// ─── RUTA: LISTAR ÓRDENES POR EMAIL ───
 app.get('/api/orders', (req, res) => {
     const email = req.query.email;
     if (!email) return res.status(400).json({ error: 'Email requerido.' });
@@ -819,7 +796,6 @@ app.get('/api/orders', (req, res) => {
     res.json(ordenes);
 });
 
-// ─── RUTA: VER ORDEN ───
 app.get('/api/orders/:id', (req, res) => {
     const ordenes = leerOrdenes();
     const orden = ordenes.find(o => o.id === req.params.id);
@@ -827,7 +803,6 @@ app.get('/api/orders/:id', (req, res) => {
     res.json(orden);
 });
 
-// ─── RUTA: VERIFICAR PAGO ───
 app.post('/api/orders/:id/pay', async (req, res) => {
     try {
         const { metodoPago, email } = req.body;
@@ -843,10 +818,10 @@ app.post('/api/orders/:id/pay', async (req, res) => {
         orden.fechaPago = new Date().toISOString();
         guardarOrdenes(ordenes);
 
-        // Descontar stock
+        
         descontarStock(orden.items);
 
-        // Email de confirmación de pago
+        
         const itemsHTML = orden.items.map(i => `
             <tr>
                 <td style="padding:10px;border-bottom:1px solid #eee;font-size:14px;">${i.nombre}</td>
@@ -893,7 +868,6 @@ app.post('/api/orders/:id/pay', async (req, res) => {
     }
 });
 
-// ─── RUTA: ENVIAR COMPROBANTE DE TRANSFERENCIA ───
 app.post('/api/orders/:id/submit-receipt', (req, res) => {
     upload(req, res, async (err) => {
         try {
@@ -907,14 +881,14 @@ app.post('/api/orders/:id/submit-receipt', (req, res) => {
             const referencia = req.body.referencia || '';
             const archivo = req.file;
 
-            // Marcar como pendiente de verificación
+            
             orden.estado = 'pending_verification';
             orden.metodoPago = 'transferencia';
             orden.referenciaTransferencia = referencia;
             orden.comprobantePath = archivo ? archivo.filename : null;
             guardarOrdenes(ordenes);
 
-            // Email al comprador: aviso que recibimos el comprobante
+            
             await enviarEmailHTML(orden.email, `Comprobante recibido - Orden #${orden.id}`, `
                 <h2 style="text-align:center;font-size:20px;font-weight:700;margin-bottom:6px;">Recibimos tu comprobante</h2>
                 <p style="text-align:center;color:#666;font-size:14px;margin-bottom:20px;">Estamos verificando el pago de tu orden <strong>#${orden.id}</strong>.</p>
@@ -926,7 +900,7 @@ app.post('/api/orders/:id/submit-receipt', (req, res) => {
                 path: archivo.path,
             }] : [];
 
-            // Notificar al admin por email (no crítico si falla)
+            
             try {
                 await sgMail.send({
                     from: FROM_EMAIL, to: process.env.ADMIN_EMAIL, replyTo: REPLY_TO,
@@ -946,7 +920,6 @@ app.post('/api/orders/:id/submit-receipt', (req, res) => {
     });
 });
 
-// ─── RUTA: CONFIRMAR PAGO (dueño) ───
 async function confirmarPago(req, res) {
     try {
         const ordenes = leerOrdenes();
@@ -1009,13 +982,12 @@ async function confirmarPago(req, res) {
 app.post('/api/orders/:id/confirm-payment', (req, res) => confirmarPago(req, res));
 app.get('/api/orders/:id/confirm-payment', (req, res) => confirmarPago(req, res));
 
-// ─── MERCADO PAGO: CREAR PREFERENCIA (Checkout Pro) ───
 app.post('/api/create-preference', async (req, res) => {
     try {
         const { orderId, total, email, items } = req.body;
         const descripcion = items ? items.map(i => `${i.nombre} x${i.cantidad}`).join(', ') : `Orden #${orderId}`;
 
-        // Marcar orden como pendiente al iniciar pago con MP
+        
         const ordenes = leerOrdenes();
         const orden = ordenes.find(o => o.id === orderId);
         if (orden && orden.estado === 'creado') {
@@ -1056,7 +1028,6 @@ app.post('/api/create-preference', async (req, res) => {
     }
 });
 
-// ─── MERCADO PAGO: PROCESAR PAGO CON TARJETA (API Transparente) ───
 app.post('/api/process-card-payment', async (req, res) => {
     try {
         const { token, orderId, email, installments, paymentMethodId, issuerId } = req.body;
@@ -1066,7 +1037,7 @@ app.post('/api/process-card-payment', async (req, res) => {
         if (!orden) return res.status(404).json({ error: 'Orden no encontrada.' });
         if (orden.pagoVerificado) return res.status(400).json({ error: 'Esta orden ya fue pagada.' });
 
-        // Marcar orden como pendiente al iniciar pago con tarjeta
+        
         if (orden.estado === 'creado') {
             orden.estado = 'pendiente';
             orden.metodoPago = 'tarjeta';
@@ -1094,7 +1065,7 @@ app.post('/api/process-card-payment', async (req, res) => {
             guardarOrdenes(ordenes);
             descontarStock(orden.items);
 
-            // Email de confirmación
+            
             const itemsHTML = orden.items.map(i => `
                 <tr>
                     <td style="padding:10px;border-bottom:1px solid #eee;font-size:14px;">${i.nombre}</td>
@@ -1141,7 +1112,6 @@ app.post('/api/process-card-payment', async (req, res) => {
     }
 });
 
-// ─── MERCADO PAGO: WEBHOOK (IPN) ───
 app.post('/api/webhook/mercadopago', async (req, res) => {
     try {
         const { type, data } = req.body;
@@ -1168,7 +1138,6 @@ app.post('/api/webhook/mercadopago', async (req, res) => {
     }
 });
 
-// ─── PRODUCTOS ───
 const PRODUCTOS_PATH = path.join(__dirname, 'db', 'productos.json');
 
 function leerProductos() {
@@ -1182,14 +1151,12 @@ function guardarProductos(productos) {
     fs.writeFileSync(PRODUCTOS_PATH, JSON.stringify(productos, null, 2));
 }
 
-// GET /api/productos — devuelve solo productos activos con stock > 0
 app.get('/api/productos', (req, res) => {
     const todos = leerProductos();
     const activos = todos.filter(p => p.activo !== false);
     res.json(activos);
 });
 
-// ─── ADMIN: LOGIN ───
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     const adminUser = process.env.ADMIN_USER || 'admin';
@@ -1201,7 +1168,6 @@ app.post('/api/admin/login', (req, res) => {
     res.status(401).json({ error: 'Credenciales incorrectas.' });
 });
 
-// ─── ADMIN: 2FA (código de 6 dígitos) ───
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@example.com';
 let admin2FACode = null;
 let admin2FAExpiry = null;
@@ -1209,7 +1175,7 @@ let admin2FAExpiry = null;
 app.post('/api/admin/send-code', authAdmin, (req, res) => {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     admin2FACode = code;
-    admin2FAExpiry = Date.now() + 5 * 60 * 1000; // 5 minutos
+    admin2FAExpiry = Date.now() + 5 * 60 * 1000; 
 
     sgMail.send({
         from: FROM_EMAIL, to: ADMIN_EMAIL, replyTo: REPLY_TO,
@@ -1237,13 +1203,12 @@ app.post('/api/admin/verify-code', authAdmin, (req, res) => {
         return res.status(400).json({ error: 'Código incorrecto.' });
     }
 
-    // Código válido: limpiar y devolver verified
+    
     admin2FACode = null;
     admin2FAExpiry = null;
     res.json({ exito: true, verified: true });
 });
 
-// Middleware: verificar token de admin
 function authAdmin(req, res, next) {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Token requerido.' });
@@ -1256,8 +1221,6 @@ function authAdmin(req, res, next) {
     }
 }
 
-// ─── ADMIN: SUBIR IMAGEN DE PRODUCTO ───
-
 app.post('/api/admin/upload-image', authAdmin, (req, res) => {
     productUpload(req, res, (err) => {
         if (err) return res.status(500).json({ error: 'Error al subir imagen.' });
@@ -1267,14 +1230,10 @@ app.post('/api/admin/upload-image', authAdmin, (req, res) => {
     });
 });
 
-// ─── ADMIN: CRUD DE PRODUCTOS ───
-
-// Listar todos (incluyendo inactivos)
 app.get('/api/admin/productos', authAdmin, (req, res) => {
     res.json(leerProductos());
 });
 
-// Crear producto
 app.post('/api/admin/productos', authAdmin, (req, res) => {
     try {
         const { nombre, precio, categoria, subcategoria, imagen, descripcion, talles, stock } = req.body;
@@ -1308,7 +1267,6 @@ app.post('/api/admin/productos', authAdmin, (req, res) => {
     }
 });
 
-// Editar producto
 app.put('/api/admin/productos/:id', authAdmin, (req, res) => {
     try {
         const productos = leerProductos();
@@ -1327,7 +1285,7 @@ app.put('/api/admin/productos/:id', authAdmin, (req, res) => {
         if (activo !== undefined) productos[idx].activo = activo;
         if (stockPorTalle !== undefined) {
             productos[idx].stockPorTalle = stockPorTalle;
-            // Recalcular stock total
+            
             const vals = Object.values(stockPorTalle);
             productos[idx].stock = vals.reduce((a, b) => a + b, 0);
         }
@@ -1340,7 +1298,6 @@ app.put('/api/admin/productos/:id', authAdmin, (req, res) => {
     }
 });
 
-// Editar stock masivo
 app.post('/api/admin/productos/bulk-stock', authAdmin, (req, res) => {
     try {
         const { action, value, categoria } = req.body;
@@ -1365,7 +1322,7 @@ app.post('/api/admin/productos/bulk-stock', authAdmin, (req, res) => {
 
             if (nuevo !== current) {
                 p.stock = nuevo;
-                // Actualizar stockPorTalle si existe
+                
                 if (p.stockPorTalle && Array.isArray(p.talles) && p.talles.length > 0) {
                     const porTalle = Math.floor(nuevo / p.talles.length);
                     const resto = nuevo % p.talles.length;
@@ -1385,7 +1342,6 @@ app.post('/api/admin/productos/bulk-stock', authAdmin, (req, res) => {
     }
 });
 
-// Eliminar producto
 app.delete('/api/admin/productos/:id', authAdmin, (req, res) => {
     try {
         const productos = leerProductos();
@@ -1400,7 +1356,6 @@ app.delete('/api/admin/productos/:id', authAdmin, (req, res) => {
     }
 });
 
-// Helper para descontar stock
 function descontarStock(items) {
     const productos = leerProductos();
     items.forEach(item => {
@@ -1413,7 +1368,6 @@ function descontarStock(items) {
     guardarProductos(productos);
 }
 
-// ─── TEST: endpoint para probar email ───
 app.get('/api/test-email', (req, res) => {
     sgMail.send({
         from: FROM_EMAIL,

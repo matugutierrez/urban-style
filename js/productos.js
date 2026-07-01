@@ -1,6 +1,5 @@
 let productos = [];
 
-// Cargar productos desde el servidor (síncrono para compatibilidad)
 (function() {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/productos', false);
